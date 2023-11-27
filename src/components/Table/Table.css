@@ -1,0 +1,17 @@
+.table-header {
+    background-color: #468faf;
+    color: #ffff !important;
+    font-weight: bold;
+}
+
+.table-item {
+    padding: 10px;
+    color: #000000;
+    text-align: center;
+    border: 1px solid #000000;
+}
+
+.right-table {
+    border-collapse: collapse;
+    width: 100%;
+}

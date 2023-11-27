@@ -3,19 +3,19 @@ import "./dashboardleft.css";
 
 export default function dashboardleft() {
   return (
-    <div class="dashboard_left">
-      <div class="left-item">
-        <div class="info-img"></div>
-        <div class="info-name">User name</div>
+    <div className="dashboard_left">
+      <div className="left-item">
+        <div className="info-img"></div>
+        <div className="info-name">User name</div>
       </div>
-      <div class="left-item">
-        <div class="info-name">Dashboard</div>
+      <div className="left-item">
+        <div className="info-name">Dashboard</div>
       </div>
-      <div class="left-item">
-        <div class="info-name">Camppaign</div>
+      <div className="left-item">
+        <div className="info-name">Camppaign</div>
       </div>
-      <div class="left-item">
-        <div class="info-name">Account</div>
+      <div className="left-item">
+        <div className="info-name">Account</div>
       </div>
     </div>
   );

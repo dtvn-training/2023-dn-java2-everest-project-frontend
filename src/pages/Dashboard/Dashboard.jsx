@@ -8,7 +8,7 @@ import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardle
 import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
 import "./Dashboard.css";
 
-export const Dashboard = () => {
+const Dashboard = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState();
   useEffect(() => {
@@ -38,10 +38,10 @@ export const Dashboard = () => {
   }, []);
   return (
     <>
-      <div class="container">
+      <div className="container">
         <Dashboardbanner />
         <Dashboardheader />
-        <div class="dashboard_body">
+        <div className="dashboard_body">
           <Dashboardleft />
           <Dashboardright />
         </div>
@@ -49,3 +49,5 @@ export const Dashboard = () => {
     </>
   );
 };
+
+export default Dashboard;
