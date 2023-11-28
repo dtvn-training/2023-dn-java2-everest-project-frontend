@@ -7,11 +7,11 @@ import InputField from "../../components/InputField/InputField";
 import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
-import { Dashboard } from "../Dashboard/Dashboard";
+import Dashboard from "../Dashboard/Dashboard";
 
 const LOGIN_URL = "/api/v1/auth/authenticate";
 
-export const Signin = () => {
+const Signin = () => {
   // const { setAuth } = useContext(AuthContext);
   const userRef = useRef();
   const errRef = useRef();
@@ -143,35 +143,4 @@ export const Signin = () => {
   );
 };
 
-// <section>
-// <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
-//   {errMsg}
-// </p>
-// <h1>Sign In</h1>
-// <form onSubmit={formik.handleSubmit}>
-//   <label htmlFor="username">Username:</label>
-//   <input
-//     type="email"
-//     id="email"
-//     ref={userRef}
-//     autoComplete="off"
-//     onChange={formik.handleChange}
-//     onBlur={formik.handleBlur}
-//     value={formik.values.email}
-//     required
-//   />
-//   {formik.touched.email && formik.errors.email ? <p>{formik.errors.email}</p> : null}
-
-//   <label htmlFor="password">Password:</label>
-//   <input
-//     type="password"
-//     id="password"
-//     onChange={formik.handleChange}
-//     onBlur={formik.handleBlur}
-//     value={formik.values.password}
-//     required
-//   />
-//   {formik.touched.password && formik.errors.password ? <p>{formik.errors.password}</p> : null}
-//   <button type="submit">Sign In</button>
-// </form>
-// </section>
+export default Signin;

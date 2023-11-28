@@ -1,6 +1,7 @@
 import React from "react";
 import "./Dashboaright.css";
-export default function Dashboaright() {
+
+const Dashboaright = () => {
   return (
     <div className="dashboard_right">
       <div className="right-header">
@@ -88,4 +89,6 @@ export default function Dashboaright() {
       </div>
     </div>
   );
-}
+};
+
+export default Dashboaright;

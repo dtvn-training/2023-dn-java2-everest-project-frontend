@@ -1,7 +1,7 @@
 import React from "react";
 import "./dashboardleft.css";
 
-export default function dashboardleft() {
+const dashboardleft = () => {
   return (
     <div className="dashboard_left">
       <div className="left-item">
@@ -19,4 +19,6 @@ export default function dashboardleft() {
       </div>
     </div>
   );
-}
+};
+
+export default dashboardleft;
