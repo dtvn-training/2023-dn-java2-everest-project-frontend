@@ -6,7 +6,7 @@ import Dashboardright from "../../components/Dashboard/dashboard_right/Dashboari
 import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
 
 const Account = () => {
-  <>
+  return (
     <div className="container">
       <Dashboardbanner />
       <Dashboardheader />
@@ -15,7 +15,7 @@ const Account = () => {
         <Dashboardright />
       </div>
     </div>
-  </>;
+  );
 };
 
 export default Account;
