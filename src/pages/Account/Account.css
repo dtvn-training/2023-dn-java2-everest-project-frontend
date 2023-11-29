@@ -11,3 +11,32 @@
     display: flex;
     flex-direction: row;
 }
+
+.content {
+    width: 100%;
+    padding: 2em;
+    background-color: white;
+}
+
+.account-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.account-header__function {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.account-header__function>button {
+    display: block;
+}
+
+.custom-input {
+    color: #000;
+    font-weight: bold;
+}

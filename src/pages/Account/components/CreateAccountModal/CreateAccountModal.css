@@ -1,0 +1,9 @@
+.CreateAccountModal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.CreateAccountModal-footer button {
+    max-width: 100px;
+}

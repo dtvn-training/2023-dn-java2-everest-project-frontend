@@ -1,0 +1,13 @@
+.EditAccountModal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.EditAccountModal-footer button {
+    max-width: 100px;
+}
+
+.custom-label-input {
+    margin: 30px 0;
+}
