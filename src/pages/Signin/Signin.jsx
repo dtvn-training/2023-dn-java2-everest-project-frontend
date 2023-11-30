@@ -8,8 +8,9 @@ import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import Dashboard from "../Dashboard/Dashboard";
+import Account from "../Account/Account";
 
-const LOGIN_URL = "/api/v1/auth/authenticate";
+const LOGIN_URL = "/api/v1/auth/login";
 
 const Signin = () => {
   // const { setAuth } = useContext(AuthContext);
@@ -47,34 +48,26 @@ const Signin = () => {
   });
 
   const handleSubmit = async (values) => {
-    try {
-      console.log(values);
-      const response = await axios.post(LOGIN_URL, values, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
-      console.log(response);
-      console.log(JSON.stringify(response?.data));
-
+    console.log(values);
+    const response = await axios.post(LOGIN_URL, values, {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    });
+    console.log(response);
+    if (response.data.code === 200) {
       const accessToken = response?.data?.accessToken;
-      const roles = response?.data?.roles;
       setEmail("");
       console.log("accesstoken: " + accessToken);
       setPassword("");
       setSuccess(true);
-      navigate("/dashboard"); // Chuyển hướng đến trang Dashboard sau khi đăng nhập thành công
-    } catch (err) {
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 400) {
-        setErrMsg("Missing Username or Password");
-      } else if (err.response?.status === 401) {
-        setErrMsg("Unauthorized");
-      } else {
-        setErrMsg("Login Failed");
-      }
+      navigate("/dashboard");
+    } else if (response.data.code === 400) {
+      const errorMessage = response?.data?.message || "Login Failed";
+      setErrMsg(errorMessage);
       errRef.current.focus();
-      console.error(err);
+    } else {
+      setErrMsg("No Server Response");
+      errRef.current.focus();
     }
   };
   const formik = useFormik({
@@ -102,6 +95,9 @@ const Signin = () => {
           <div className="form-container">
             <form onSubmit={formik.handleSubmit}>
               <div className="form-title">WELCOME</div>
+              <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
+                {errMsg}
+              </p>
               <div className="form-group">
                 <input
                   type="email"
