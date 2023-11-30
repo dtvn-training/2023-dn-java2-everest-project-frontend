@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Account.css";
 import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
 import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
@@ -6,123 +6,34 @@ import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
 import { Space, Table, Tag, Input, Button, Modal } from "antd";
 import CreateAccountModal from "./components/CreateAccountModal/CreateAccountModal";
 import EditAccountModal from "./components/EditAccoutModal/EditAccountModal";
+import { useFetchAccounts } from "../../hooks/accounts/useFetchAccounts";
 
 const Account = () => {
   const [modals, SetModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 3,
+  });
+  const [total, setTotal] = useState(0);
 
-  const data = [
-    {
-      accountId: 1,
-      firstname: "PhamPham1Pham1",
-      lastname: "Anh Quyet",
-      email: "quyet@mail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Nguyen",
-      lastname: "Thien Nhan",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Nhan",
-      lastname: "Nguyen Thien",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-  ];
+  const { data: fetchAccounts, isLoading } = useFetchAccounts(pagination.pageSize, pagination.current -1);
+  console.log(fetchAccounts);
 
+  useEffect(() => {
+    if(fetchAccounts) {
+      setTotal(fetchAccounts?.data?.totalElements || 0)
+    }
+  },[fetchAccounts])
+  console.log(total);
+  const handleTableChange = (pagination, filters, sorter) => {
+    setPagination({
+      ...pagination,
+      pageSize: pagination.pageSize || 3,
+      current: pagination.current || 1,
+    });
+  };
   const handleEdit = (record) => {
     setEditModal(true);
     setSelectedRecord(record);
@@ -238,14 +149,22 @@ const Account = () => {
           </div>
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={fetchAccounts?.data?.content || []}
+            loading={isLoading}
             pagination={{
-              pageSize: 3,
+              ...pagination,
+              total: total,
+              showSizeChanger: false,
+              showQuickJumper: false,
+              onChange: (page) => {
+                setPagination({ ...pagination, current: page });
+              },
               style: {
                 display: "flex",
                 justifyContent: "center",
               },
             }}
+            onChange={handleTableChange}
           />
         </div>
       </div>

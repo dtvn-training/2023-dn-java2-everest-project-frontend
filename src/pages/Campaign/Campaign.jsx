@@ -88,7 +88,11 @@ const Campaign = () => {
               <Button type="default" style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}>
                 Export CSV
               </Button>
-              <Button type="default" style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}>
+              <Button
+                type="default"
+                onClick={() => SetModal(true)}
+                style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}
+              >
                 Create Campaign
               </Button>
             </div>
@@ -107,7 +111,7 @@ const Campaign = () => {
         </div>
       </div>
       <CreateCampaignModal
-        isModalOpen={true}
+        isModalOpen={modals}
         handleOk={() => {}}
         handleCancel={() => {
           SetModal(!modals);

@@ -6,7 +6,7 @@ import "./Signin.css";
 import InputField from "../../components/InputField/InputField";
 import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
-import axios from "../../api/axios";
+import axios from "../../api/axiosClient";
 import Dashboard from "../Dashboard/Dashboard";
 import Account from "../Account/Account";
 
@@ -40,12 +40,6 @@ const Signin = () => {
     const refreshToken = window.localStorage.getItem("refreshToken");
     return refreshToken;
   }
-  const instance = axios.create({
-    baseURL: "http://localhost:8080/api",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
 
   const handleSubmit = async (values) => {
     console.log(values);
@@ -55,9 +49,12 @@ const Signin = () => {
     });
     console.log(response);
     if (response.data.code === 200) {
-      const accessToken = response?.data?.accessToken;
+      const accessToken = response?.data?.access_token;
+      const refreshToken = response?.data?.refresh_token;
       setEmail("");
       console.log("accesstoken: " + accessToken);
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
       setPassword("");
       setSuccess(true);
       navigate("/dashboard");
