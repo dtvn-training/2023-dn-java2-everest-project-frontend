@@ -207,7 +207,7 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
           ]}
           hasFeedback
         >
-          <Input type="password" style={styledInput} onBlur={() => form.validateFields(["password"])} />
+          <Input.Password type="password" style={styledInput} onBlur={() => form.validateFields(["password"])} />
         </Form.Item>
         <Form.Item
           label="Confirm password"
@@ -262,7 +262,11 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
           ]}
           hasFeedback
         >
-          <Input type="password" style={styledInput} onBlur={() => form.validateFields(["confirm-password"])} />
+          <Input.Password
+            type="password"
+            style={styledInput}
+            onBlur={() => form.validateFields(["confirm-password"])}
+          />
         </Form.Item>
       </Form>
     </Modal>

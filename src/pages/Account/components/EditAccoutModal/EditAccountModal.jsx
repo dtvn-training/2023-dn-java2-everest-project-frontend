@@ -36,7 +36,13 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
       title="Edit Account"
       footer={[
         <div className="EditAccountModal-footer" key="footer">
-          <Button key="cancel" onClick={handleCancel}>
+          <Button
+            key="cancel"
+            onClick={() => {
+              form.resetFields();
+              handleCancel();
+            }}
+          >
             Cancel
           </Button>
           <Button key="submit" type="primary" onClick={() => form.submit()}>
