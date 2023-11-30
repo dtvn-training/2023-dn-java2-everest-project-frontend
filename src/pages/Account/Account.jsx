@@ -131,13 +131,17 @@ const Account = () => {
   const handleDelete = (record) => {
     // Add your delete logic here
     Modal.confirm({
-      title: "Confirm Delete",
-      content: "Are you sure you want to delete this record?",
+      title: "Confirmination",
+      content: "Please confirm that you want to delete everything.",
       okText: "Delete",
+      okButtonProps: {
+        style: { backgroundColor: "#F7685B", color: "white" },
+      },
       onOk: () => {
         // Implement your delete logic here
         console.log("Deleted", record);
       },
+      className: "DeleteAccountModal-footer",
     });
   };
   const columns = [
@@ -145,37 +149,44 @@ const Account = () => {
       title: "ID",
       dataIndex: "accountId",
       key: "accountId",
+      align: "center",
     },
     {
       title: "Username",
       dataIndex: "username",
       key: "username",
+      align: "center",
       render: (_, record) => <span>{`${record.firstname} ${record.lastname}`}</span>,
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      align: "center",
     },
     {
       title: "Role",
       dataIndex: "role",
       key: "role",
+      align: "center",
     },
     {
       title: "Address",
       dataIndex: "address",
       key: "address",
+      align: "center",
     },
     {
       title: "Phone",
       dataIndex: "phone",
       key: "phone",
+      align: "center",
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      align: "center",
       render: (_, record) => (
         <div>
           <Button
@@ -238,7 +249,13 @@ const Account = () => {
           />
         </div>
       </div>
-      <CreateAccountModal isModalOpen={modals} handleOk={() => {}} handleCancel={() => SetModal(!modals)} />
+      <CreateAccountModal
+        isModalOpen={modals}
+        handleOk={() => {}}
+        handleCancel={() => {
+          SetModal(!modals);
+        }}
+      />
       <EditAccountModal
         isModalOpen={editModal}
         handleOk={() => {}}

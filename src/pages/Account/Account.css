@@ -40,3 +40,39 @@
     color: #000;
     font-weight: bold;
 }
+
+.ant-form-item-explain-error {
+    margin-left: 30px !important;
+}
+
+.ant-table-thead .ant-table-cell {
+    background-color: #468faf !important;
+    color: #fff !important;
+}
+
+.ant-table-cell {
+    border: 1px solid #fff !important;
+}
+
+.ant-table-cell::before {
+    background-color: transparent !important
+}
+
+.ant-table,
+.ant-table-cell {
+    border-radius: 0 !important;
+}
+
+.ant-table {
+    border-collapse: separate !important;
+}
+
+.DeleteAccountModal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.DeleteAccountModal-footer button {
+    max-width: 100px;
+}

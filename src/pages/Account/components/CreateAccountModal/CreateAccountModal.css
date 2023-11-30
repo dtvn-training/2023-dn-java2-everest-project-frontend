@@ -7,3 +7,7 @@
 .CreateAccountModal-footer button {
     max-width: 100px;
 }
+
+.custom-label-input {
+    margin: 30px 0;
+}

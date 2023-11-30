@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input, Button, Select } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import "./EditAccountModal.css";
+
+const { Option } = Select;
 
 const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) => {
   const [form] = useForm();
@@ -19,6 +21,16 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
   const styledInput = {
     marginLeft: "2.5em",
   };
+  const roles = [
+    {
+      role_id: "1",
+      role_name: "ADMIN",
+    },
+    {
+      role_id: "2",
+      role_name: "DAC",
+    },
+  ];
   return (
     <Modal
       title="Edit Account"
@@ -89,7 +101,13 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
             },
           ]}
         >
-          <Input style={styledInput} />
+          <Select style={styledInput}>
+            {roles.map((role) => (
+              <Option key={role.role_id} value={role.role_name}>
+                {role.role_name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item
           label="Address"
@@ -128,7 +146,7 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
             },
           ]}
         >
-          <Input style={styledInput} />
+          <Input type="password" style={styledInput} />
         </Form.Item>
         <Form.Item
           label="Confirm password"
@@ -137,11 +155,11 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
           rules={[
             {
               required: true,
-              message: "Please input password!",
+              message: "Please reinput password!",
             },
           ]}
         >
-          <Input style={styledInput} />
+          <Input type="password" style={styledInput} />
         </Form.Item>
       </Form>
     </Modal>
