@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Form, Input, Button, Select } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import "./CreateAccountModal.css";
+import { nameRegex, addressRegex, emailRegex, phoneRegex } from "../../../../utils/RegularExpression";
 
 const { Option } = Select;
 const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
@@ -23,6 +24,7 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
       role_name: "DAC",
     },
   ];
+
   return (
     <Modal
       title="Create Account"
@@ -57,9 +59,14 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
               required: true,
               message: "Please input your first name!",
             },
+            {
+              message: "Please input a valid first name!",
+              pattern: nameRegex,
+            },
           ]}
+          hasFeedback
         >
-          <Input style={styledInput} />
+          <Input style={styledInput} onBlur={() => form.validateFields(["firstname"])} />
         </Form.Item>
         <Form.Item
           label="Last Name"
@@ -70,9 +77,14 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
               required: true,
               message: "Please input your last name!",
             },
+            {
+              message: "Please input a valid last name!",
+              pattern: nameRegex,
+            },
           ]}
+          hasFeedback
         >
-          <Input style={styledInput} />
+          <Input style={styledInput} onBlur={() => form.validateFields(["lastname"])} />
         </Form.Item>
         <Form.Item
           label="Email"
@@ -81,12 +93,16 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
           rules={[
             {
               required: true,
-              type: "email",
-              message: "Please input a valid email address!",
+              message: "Please input an email!",
+            },
+            {
+              message: "Please input a valid email!",
+              pattern: emailRegex,
             },
           ]}
+          hasFeedback
         >
-          <Input style={styledInput} />
+          <Input style={styledInput} onBlur={() => form.validateFields(["email"])} />
         </Form.Item>
         <Form.Item
           label="Role"
@@ -95,11 +111,12 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
           rules={[
             {
               required: true,
-              message: "Please input your role!",
+              message: "Please choose a role!",
             },
           ]}
+          hasFeedback
         >
-          <Select style={styledInput}>
+          <Select style={styledInput} onBlur={() => form.validateFields(["role"])}>
             {roles.map((role) => (
               <Option key={role.role_id} value={role.role_name}>
                 {role.role_name}
@@ -114,11 +131,16 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
           rules={[
             {
               required: true,
-              message: "Please input your address!",
+              message: "Please input an address!",
+            },
+            {
+              message: "Please input an valid address!",
+              pattern: addressRegex,
             },
           ]}
+          hasFeedback
         >
-          <Input style={styledInput} />
+          <Input style={styledInput} onBlur={() => form.validateFields(["address"])} />
         </Form.Item>
         <Form.Item
           label="Phone"
@@ -127,11 +149,16 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
           rules={[
             {
               required: true,
-              message: "Please input your phone number!",
+              message: "Please input a phone number!",
+            },
+            {
+              message: "Please input a valid phone number!",
+              pattern: phoneRegex,
             },
           ]}
+          hasFeedback
         >
-          <Input style={styledInput} />
+          <Input style={styledInput} onBlur={() => form.validateFields(["phone"])} />
         </Form.Item>
         <Form.Item
           label="Password"
@@ -142,9 +169,45 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
               required: true,
               message: "Please input password!",
             },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value) {
+                  return Promise.resolve(); // No validation if the field is empty
+                }
+                const minLength = 8;
+                const hasDigit = /\d/.test(value);
+                const hasUpperCase = /[A-Z]/.test(value);
+                const hasSpecialChar = /[@#$%^&+=!]/.test(value);
+                const hasSpace = /\s/.test(value);
+                const startsWithSpace = /^\s/.test(value);
+                const endsWithSpace = /\s$/.test(value);
+
+                if (value.length < minLength) {
+                  return Promise.reject("Password must be at least 8 characters long");
+                }
+                if (!hasDigit) {
+                  return Promise.reject("Password must contain at least one digit");
+                }
+                if (!hasUpperCase) {
+                  return Promise.reject("Password must have at least one capital letter");
+                }
+                if (!hasSpecialChar) {
+                  return Promise.reject("Password must contain at least one special character (@#$%^&+=!)");
+                }
+                if (hasSpace) {
+                  return Promise.reject("Password must not contain space characters");
+                }
+                if (startsWithSpace || endsWithSpace) {
+                  return Promise.reject("Passwords cannot begin or end with a space character");
+                }
+
+                return Promise.resolve();
+              },
+            }),
           ]}
+          hasFeedback
         >
-          <Input type="password" style={styledInput} />
+          <Input type="password" style={styledInput} onBlur={() => form.validateFields(["password"])} />
         </Form.Item>
         <Form.Item
           label="Confirm password"
@@ -155,9 +218,51 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
               required: true,
               message: "Please reinput password!",
             },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value) {
+                  return Promise.resolve(); // No validation if the field is empty
+                }
+                const minLength = 8;
+                const hasDigit = /\d/.test(value);
+                const hasUpperCase = /[A-Z]/.test(value);
+                const hasSpecialChar = /[@#$%^&+=!]/.test(value);
+                const hasSpace = /\s/.test(value);
+                const startsWithSpace = /^\s/.test(value);
+                const endsWithSpace = /\s$/.test(value);
+
+                if (value.length < minLength) {
+                  return Promise.reject("Password must be at least 8 characters long");
+                }
+                if (!hasDigit) {
+                  return Promise.reject("Password must contain at least one digit");
+                }
+                if (!hasUpperCase) {
+                  return Promise.reject("Password must have at least one capital letter");
+                }
+                if (!hasSpecialChar) {
+                  return Promise.reject("Password must contain at least one special character (@#$%^&+=!)");
+                }
+                if (hasSpace) {
+                  return Promise.reject("Password must not contain space characters");
+                }
+                if (startsWithSpace || endsWithSpace) {
+                  return Promise.reject("Passwords cannot begin or end with a space character");
+                }
+
+                const originalPassword = getFieldValue("password");
+
+                if (value === originalPassword) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject("Passwords do not match");
+              },
+            }),
           ]}
+          hasFeedback
         >
-          <Input type="password" style={styledInput} />
+          <Input type="password" style={styledInput} onBlur={() => form.validateFields(["confirm-password"])} />
         </Form.Item>
       </Form>
     </Modal>
