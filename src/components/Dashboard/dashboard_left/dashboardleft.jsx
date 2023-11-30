@@ -1,5 +1,6 @@
 import React from "react";
 import "./dashboardleft.css";
+import { Link } from "react-router-dom";
 
 const dashboardleft = () => {
   return (
@@ -8,15 +9,15 @@ const dashboardleft = () => {
         <div className="info-img"></div>
         <div className="info-name">User name</div>
       </div>
-      <div className="left-item">
+      <Link to="/dashboard" className="left-item">
         <div className="info-name">Dashboard</div>
-      </div>
-      <div className="left-item">
+      </Link>
+      <Link to="/campaign" className="left-item">
         <div className="info-name">Camppaign</div>
-      </div>
-      <div className="left-item">
+      </Link>
+      <Link to="/account" className="left-item">
         <div className="info-name">Account</div>
-      </div>
+      </Link>
     </div>
   );
 };

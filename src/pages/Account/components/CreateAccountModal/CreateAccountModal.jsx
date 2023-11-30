@@ -1,17 +1,40 @@
 import React from "react";
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input, Button, Select } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import "./CreateAccountModal.css";
 
+const { Option } = Select;
 const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const [form] = useForm();
-
+  const formItemLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 16 },
+  };
+  const styledInput = {
+    marginLeft: "2.5em",
+  };
+  const roles = [
+    {
+      role_id: "1",
+      role_name: "ADMIN",
+    },
+    {
+      role_id: "2",
+      role_name: "DAC",
+    },
+  ];
   return (
     <Modal
       title="Create Account"
       footer={[
         <div className="CreateAccountModal-footer" key="footer">
-          <Button key="cancel" onClick={handleCancel}>
+          <Button
+            key="cancel"
+            onClick={() => {
+              form.resetFields();
+              handleCancel();
+            }}
+          >
             Cancel
           </Button>
           <Button key="submit" type="primary" onClick={() => form.submit()}>
@@ -22,21 +45,13 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
       visible={isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
+      width={650}
     >
-      <Form
-        form={form}
-        initialValues={{
-          firstname: "PhamPham1Pham1",
-          lastname: "Anh Quyet",
-          email: "quyet@mail.com",
-          role: "ADMIN",
-          address: "Nghe An",
-          phone: "0123456789",
-        }}
-      >
+      <Form form={form} {...formItemLayout} labelAlign="left">
         <Form.Item
           label="First Name"
           name="firstname"
+          className="custom-label-input"
           rules={[
             {
               required: true,
@@ -44,11 +59,12 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
             },
           ]}
         >
-          <Input />
+          <Input style={styledInput} />
         </Form.Item>
         <Form.Item
           label="Last Name"
           name="lastname"
+          className="custom-label-input"
           rules={[
             {
               required: true,
@@ -56,11 +72,12 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
             },
           ]}
         >
-          <Input />
+          <Input style={styledInput} />
         </Form.Item>
         <Form.Item
           label="Email"
           name="email"
+          className="custom-label-input"
           rules={[
             {
               required: true,
@@ -69,11 +86,12 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
             },
           ]}
         >
-          <Input />
+          <Input style={styledInput} />
         </Form.Item>
         <Form.Item
           label="Role"
           name="role"
+          className="custom-label-input"
           rules={[
             {
               required: true,
@@ -81,11 +99,18 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
             },
           ]}
         >
-          <Input />
+          <Select style={styledInput}>
+            {roles.map((role) => (
+              <Option key={role.role_id} value={role.role_name}>
+                {role.role_name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item
           label="Address"
           name="address"
+          className="custom-label-input"
           rules={[
             {
               required: true,
@@ -93,11 +118,12 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
             },
           ]}
         >
-          <Input />
+          <Input style={styledInput} />
         </Form.Item>
         <Form.Item
           label="Phone"
           name="phone"
+          className="custom-label-input"
           rules={[
             {
               required: true,
@@ -105,7 +131,33 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
             },
           ]}
         >
-          <Input />
+          <Input style={styledInput} />
+        </Form.Item>
+        <Form.Item
+          label="Password"
+          name="password"
+          className="custom-label-input"
+          rules={[
+            {
+              required: true,
+              message: "Please input password!",
+            },
+          ]}
+        >
+          <Input type="password" style={styledInput} />
+        </Form.Item>
+        <Form.Item
+          label="Confirm password"
+          name="confirm-password"
+          className="custom-label-input"
+          rules={[
+            {
+              required: true,
+              message: "Please reinput password!",
+            },
+          ]}
+        >
+          <Input type="password" style={styledInput} />
         </Form.Item>
       </Form>
     </Modal>
