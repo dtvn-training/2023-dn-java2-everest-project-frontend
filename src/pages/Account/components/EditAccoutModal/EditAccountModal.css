@@ -9,27 +9,6 @@
 }
 
 .custom-label-input {
-<<<<<<< HEAD
-    margin: 30px 0;
-}
-
-.ant-form-item-explain-error {
-    margin-left: 30px !important;
-}
-
-.ant-table-thead .ant-table-cell {
-    background-color: #468faf !important;
-    color: #fff !important;
-}
-
-.ant-table-cell {
-    border: 1px solid #000 !important;
-}
-
-.ant-table-cell::before {
-    background-color: transparent !important
-}
-=======
   margin: 30px 0;
 }
 
@@ -49,4 +28,3 @@
 .ant-table-cell::before {
   background-color: transparent !important;
 }
->>>>>>> 69d20dca7b8d4d2391b667d7798d8bb61e7b053f

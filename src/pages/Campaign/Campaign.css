@@ -29,5 +29,6 @@
   color: #ffff !important;
   font-weight: bold;
 }
-.ant-table-cell {
+.ant-modal {
+  margin-top: -74px;
 }

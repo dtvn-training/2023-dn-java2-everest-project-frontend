@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Upload, Select, Button, Image, Modal } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useDropzone } from "react-dropzone";
 import Resizer from "react-image-file-resizer";
 import { UploadOutlined } from "@ant-design/icons";
 
-const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel }) => {
+const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }) => {
   const [form] = useForm();
   const { Option } = Select;
   const styledInput = {
@@ -25,17 +25,51 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel }) => {
     labelCol: { span: 6 },
     wrapperCol: { span: 16 },
   };
-  const validateBidAmount = (_, value) => {
-    if (isNaN(value)) {
-      return Promise.reject("Bid amount must be a number!");
+  const [isEmptyErrorDisplayed, setEmptyErrorDisplayed] = useState(false);
+
+  const validateName = (_, value) => {
+    const minLength = 2;
+    const maxLength = 50;
+
+    if (!value) {
+      return Promise.reject("Please enter your name.");
     }
+
+    if (value.length < minLength || value.length > maxLength) {
+      return Promise.reject(`Name must be between ${minLength} and ${maxLength} characters.`);
+    }
+
+    const specialCharactersRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%^&*(){}|~<>;:[\]]{2,}$/;
+
+    if (!specialCharactersRegex.test(value)) {
+      return Promise.reject("Name cannot contain special characters");
+    }
+
     return Promise.resolve();
   };
-
+  const validateNumber = (_, value, msgReject, msgResolve, type) => {
+    const minValue = 0;
+    const maxValue = 10000000000;
+    if (!value) {
+      setEmptyErrorDisplayed(true);
+      return Promise.reject(msgReject);
+    }
+    if (isNaN(value)) {
+      setEmptyErrorDisplayed(false);
+      return Promise.reject(msgResolve);
+    }
+    if (value < minValue) {
+      return Promise.reject(`${type} must be a positive number`);
+    }
+    if (value > maxValue) {
+      return Promise.reject(`${type} is too large`);
+    }
+    setEmptyErrorDisplayed(false);
+    return Promise.resolve();
+  };
   const [imageUrl, setImageUrl] = React.useState(null);
 
   const onFinish = (values) => {
-    // Xử lý khi form được submit
     console.log("Received values:", values);
   };
 
@@ -81,15 +115,17 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel }) => {
       onCancel={handleCancel}
       width={650}
     >
-      <Form form={form} {...formItemLayout} labelAlign="left">
+      <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
         <Form.Item
           label="Name"
           name="name"
           className="custom-label-input"
           rules={[
             {
-              required: true,
-              message: "Please input campaign name!",
+              required: false,
+            },
+            {
+              validator: validateName,
             },
           ]}
           hasFeedback
@@ -126,6 +162,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel }) => {
               message: "Please input a valid email address!",
             },
           ]}
+          hasFeedback
         >
           <Input style={styledInput} />
         </Form.Item>
@@ -135,10 +172,14 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel }) => {
           className="custom-label-input"
           rules={[
             {
-              required: true,
-              message: "Please input your Budget!",
+              required: false,
+            },
+            {
+              validator: (_, value) =>
+                validateNumber(_, value, "Please input your Budget!", "Budget must be a number!", "Budget"),
             },
           ]}
+          hasFeedback
         >
           <Input style={styledInput} />
         </Form.Item>
@@ -148,16 +189,18 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel }) => {
           className="custom-label-input"
           rules={[
             {
-              required: true,
-              message: "Please input your bid amount!",
+              required: false,
             },
             {
-              validator: validateBidAmount,
+              validator: (_, value) =>
+                validateNumber(_, value, "Please input your bid amount!", "Bid amount must be a number!", "Bid amount"),
             },
           ]}
+          hasFeedback
         >
           <Input style={styledInput} />
         </Form.Item>
+
         <Form.Item
           label="Title"
           name="title"

@@ -8,7 +8,6 @@ import { Space, Table, Tag, Input, Button, Modal } from "antd";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
 const Campaign = () => {
-  const [modals, SetModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [data, setData] = useState(null);
@@ -88,7 +87,11 @@ const Campaign = () => {
               <Button type="default" style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}>
                 Export CSV
               </Button>
-              <Button type="default" style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}>
+              <Button
+                onClick={() => setEditModal(true)}
+                type="default"
+                style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}
+              >
                 Create Campaign
               </Button>
             </div>
@@ -107,10 +110,10 @@ const Campaign = () => {
         </div>
       </div>
       <CreateCampaignModal
-        isModalOpen={true}
+        isModalOpen={editModal}
         handleOk={() => {}}
         handleCancel={() => {
-          SetModal(!modals);
+          setEditModal(!editModal);
         }}
       />
     </div>
