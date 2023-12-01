@@ -1,25 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import "./dashboardleft.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-const dashboardleft = () => {
+const Dashboardleft = () => {
+  const location = useLocation();
+  const pageMappings = {
+    "/dashboard": { label: "Dashboard", icon: "fas fa-chart-bar" },
+    "/campaign": { label: "Campaign", icon: "fas fa-bullhorn" },
+    "/account": { label: "Account", icon: "fas fa-user" },
+  };
+  const [isMenuOpen, setMenuOpen] = useState(true);
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
   return (
-    <div className="dashboard_left">
-      <div className="left-item">
+    <div className={`dashboard_left ${isMenuOpen ? "" : "slide-out"}`}>
+      <button className="toggle-button" onClick={toggleMenu}>
+        <i className={`fas ${isMenuOpen ? "fa-chevron-left" : "fa-chevron-right"}`}></i>
+        <p className="toggle-button__name">Toggle sidebar</p>
+      </button>
+      <div className="left-item__user-info">
         <div className="info-img"></div>
         <div className="info-name">User name</div>
       </div>
-      <Link to="/dashboard" className="left-item">
-        <div className="info-name">Dashboard</div>
-      </Link>
-      <Link to="/campaign" className="left-item">
-        <div className="info-name">Camppaign</div>
-      </Link>
-      <Link to="/account" className="left-item">
-        <div className="info-name">Account</div>
-      </Link>
+      {Object.keys(pageMappings).map((path) => (
+        <Link to={path} key={path} className={`left-item ${location.pathname === path ? "active" : ""}`}>
+          <i className={pageMappings[path].icon}></i>
+          <p className="info-name">{pageMappings[path].label}</p>
+        </Link>
+      ))}
     </div>
   );
 };
 
-export default dashboardleft;
+export default Dashboardleft;
