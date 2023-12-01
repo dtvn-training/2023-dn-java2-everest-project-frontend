@@ -8,4 +8,4 @@ export const useDeleteAccount = () => {
   return useMutation(({ id }) => {
     return dataAccounts({id});
   });
-};
+};  
