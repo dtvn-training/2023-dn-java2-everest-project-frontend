@@ -50,6 +50,7 @@ const EditAccountModal = ({ isModalOpen, refetch, handleOk, handleCancel, initia
         record: initValue,
       });
       await refetch();
+      console.log("Data refetched successfully!");
       form.resetFields();
       handleCancel();
     } catch (error) {

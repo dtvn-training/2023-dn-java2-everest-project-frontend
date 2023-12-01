@@ -1,5 +1,5 @@
-import React from "react";
-import { Modal, Form, Input, Button, Select } from "antd";
+import React, { useState } from "react";
+import { Modal, Form, Input, Button, Select,message } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import "./CreateAccountModal.css";
 import { nameRegex, addressRegex, emailRegex, phoneRegex } from "../../../../utils/RegularExpression";
@@ -8,6 +8,7 @@ import useCreateAccount from "../../../../hooks/accounts/useCreateAccount";
 const { Option } = Select;
 const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const [form] = useForm();
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
   const formItemLayout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 16 },
@@ -26,15 +27,36 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
     },
   ];
   const { createAccount } = useCreateAccount();
+  const showSuccessMessage = () => {
+    message.success("Account created successfully");
+  };
   const onFinish = async (values) => {
     try {
-      await createAccount(values);
+      console.log(values);
+      const requestData = {
+        email: values.email,
+        password: values.password,
+        firstname: values.firstname,
+        lastname: values.lastname,
+        role: values.role,
+        address: values.address,
+        phone: values.phone,
+      };
+      await createAccount(requestData);
+      console.log("request",requestData);
       form.resetFields();
+      showSuccessMessage();
+      setIsSuccessModalVisible(true);
       handleOk();
     } catch (error) {
       console.error("Error creating account", error);
       // Handle error if needed
     }
+  };
+
+  const handleSuccessModalOk = () => {
+    setIsSuccessModalVisible(false);
+    handleOk();
   };
 
   return (
@@ -281,7 +303,16 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
           />
         </Form.Item>
       </Form>
+      <Modal
+        title="Success"
+        visible={isSuccessModalVisible}
+        onOk={handleSuccessModalOk}
+        onCancel={() => setIsSuccessModalVisible(false)}
+      >
+        <p>Account created successfully!</p>
+      </Modal>
     </Modal>
+    
   );
 };
 
