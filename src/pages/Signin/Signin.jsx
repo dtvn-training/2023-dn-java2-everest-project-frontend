@@ -57,7 +57,7 @@ const Signin = () => {
       localStorage.setItem("refreshToken", refreshToken);
       setPassword("");
       setSuccess(true);
-      navigate("/dashboard");
+      navigate("/campaign");
     } else if (response.data.code === 400) {
       const errorMessage = response?.data?.message || "Login Failed";
       setErrMsg(errorMessage);

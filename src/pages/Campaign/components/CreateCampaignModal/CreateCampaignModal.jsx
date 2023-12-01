@@ -4,7 +4,8 @@ import { useForm } from "antd/lib/form/Form";
 import { useDropzone } from "react-dropzone";
 import Resizer from "react-image-file-resizer";
 import { UploadOutlined } from "@ant-design/icons";
-
+import { nameRegex } from "../../../../utils/RegularExpression";
+import "./CreateCampaignModal.css";
 const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }) => {
   const [form] = useForm();
   const { Option } = Select;
@@ -26,25 +27,30 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     wrapperCol: { span: 16 },
   };
   const [isEmptyErrorDisplayed, setEmptyErrorDisplayed] = useState(false);
-
   const validateName = (_, value) => {
     const minLength = 2;
     const maxLength = 50;
-
     if (!value) {
       return Promise.reject("Please enter your name.");
     }
-
     if (value.length < minLength || value.length > maxLength) {
       return Promise.reject(`Name must be between ${minLength} and ${maxLength} characters.`);
     }
-
     const specialCharactersRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%^&*(){}|~<>;:[\]]{2,}$/;
-
     if (!specialCharactersRegex.test(value)) {
       return Promise.reject("Name cannot contain special characters");
     }
-
+    return Promise.resolve();
+  };
+  const validateTitle = (_, value) => {
+    const minLength = 2;
+    const maxLength = 50;
+    if (!value) {
+      return Promise.reject("Please enter your title.");
+    }
+    if (value.length < minLength || value.length > maxLength) {
+      return Promise.reject(`Title must be between ${minLength} and ${maxLength} characters.`);
+    }
     return Promise.resolve();
   };
   const validateNumber = (_, value, msgReject, msgResolve, type) => {
@@ -68,23 +74,17 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     return Promise.resolve();
   };
   const [imageUrl, setImageUrl] = React.useState(null);
-
   const onFinish = (values) => {
     console.log("Received values:", values);
   };
-
   const beforeUpload = (file) => {
     const reader = new FileReader();
-
     reader.onload = (e) => {
       setImageUrl(e.target.result);
     };
-
     reader.readAsDataURL(file);
-
     return false; // Prevent default upload behavior
   };
-
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -124,6 +124,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
             {
               required: false,
             },
+            
             {
               validator: validateName,
             },
@@ -200,17 +201,19 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
         >
           <Input style={styledInput} />
         </Form.Item>
-
         <Form.Item
           label="Title"
           name="title"
           className="custom-label-input"
           rules={[
             {
-              required: true,
-              message: "Please input title!",
+              required: false,
+            },
+            {
+              validator: validateTitle,
             },
           ]}
+          hasFeedback
         >
           <Input style={styledInput} />
         </Form.Item>
@@ -239,19 +242,17 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload
-            showUploadList={false} // Ẩn danh sách upload mặc định của Ant Design
-            beforeUpload={beforeUpload}
-          >
+          <Upload showUploadList={false} beforeUpload={beforeUpload}>
             <Button style={styledInput} icon={<UploadOutlined />}>
               Click to Upload
             </Button>
           </Upload>
         </Form.Item>
-
         {imageUrl && (
           <Form.Item label="Preview Image">
-            <Image src={imageUrl} alt="Uploaded" style={({ maxWidth: "100%" }, styledInput)} />
+            <div style={{ width: "1200px", height: "132px", overflow: "hidden", marginLeft: "2.5em" }}>
+              <Image src={imageUrl} alt="Uploaded" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
           </Form.Item>
         )}
         <Form.Item
@@ -270,5 +271,4 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     </Modal>
   );
 };
-
 export default CreateCampaignModal;
