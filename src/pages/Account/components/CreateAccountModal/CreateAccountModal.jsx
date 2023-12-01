@@ -3,6 +3,7 @@ import { Modal, Form, Input, Button, Select } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import "./CreateAccountModal.css";
 import { nameRegex, addressRegex, emailRegex, phoneRegex } from "../../../../utils/RegularExpression";
+import useCreateAccount from "../../../../hooks/accounts/useCreateAccount";
 
 const { Option } = Select;
 const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
@@ -24,6 +25,17 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
       role_name: "DAC",
     },
   ];
+  const { createAccount } = useCreateAccount();
+  const onFinish = async (values) => {
+    try {
+      await createAccount(values);
+      form.resetFields();
+      handleOk();
+    } catch (error) {
+      console.error("Error creating account", error);
+      // Handle error if needed
+    }
+  };
 
   return (
     <Modal
@@ -49,7 +61,7 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
       onCancel={handleCancel}
       width={650}
     >
-      <Form form={form} {...formItemLayout} labelAlign="left">
+      <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
         <Form.Item
           label="First Name"
           name="firstname"

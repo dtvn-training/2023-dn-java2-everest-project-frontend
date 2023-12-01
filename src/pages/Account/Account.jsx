@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Account.css";
 import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
 import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
@@ -6,123 +6,48 @@ import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
 import { Space, Table, Tag, Input, Button, Modal } from "antd";
 import CreateAccountModal from "./components/CreateAccountModal/CreateAccountModal";
 import EditAccountModal from "./components/EditAccoutModal/EditAccountModal";
+import { useFetchAccounts } from "../../hooks/accounts/useFetchAccounts";
+import { useDeleteAccount } from "../../hooks/accounts/useDeleteAccount";
+import { useSearchAccounts } from "../../hooks/accounts/useSearchAccounts";
 
 const Account = () => {
   const [modals, SetModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 3,
+  });
+  const [total, setTotal] = useState(0);
+  const [searchText, setSearchText] = useState('');
 
-  const data = [
-    {
-      accountId: 1,
-      firstname: "PhamPham1Pham1",
-      lastname: "Anh Quyet",
-      email: "quyet@mail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Nguyen",
-      lastname: "Thien Nhan",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Nhan",
-      lastname: "Nguyen Thien",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-    {
-      accountId: 2,
-      firstname: "Pham",
-      lastname: "Anh Quyet",
-      email: "thiennhan@gmail.com",
-      role: "ADMIN",
-      address: "Nghe An",
-      phone: "0123456789",
-    },
-  ];
-
+  const { data: fetchAccounts, isLoading ,refetch} = useFetchAccounts(pagination.pageSize, pagination.current -1);
+  
+  console.log(fetchAccounts);
+  const { mutateAsync } = useDeleteAccount();
+  const { data: searchAccounts, isLoading: searchAccountsLoading, refetch: searchAccountsRefetch } = useSearchAccounts(
+    searchText,
+    pagination.pageSize,
+    pagination.current - 1
+  );
+  useEffect(() => {
+    if (searchAccounts) {
+      setTotal(searchAccounts?.data?.totalElements || 0);
+    }
+  }, [searchAccounts]);
+  useEffect(() => {
+    if(fetchAccounts) {
+      setTotal(fetchAccounts?.data?.totalElements || 0)
+    }
+  },[fetchAccounts])
+  console.log(total);
+  const handleTableChange = (pagination, filters, sorter) => {
+    setPagination({
+      ...pagination,
+      pageSize: pagination.pageSize || 3,
+      current: pagination.current || 1,
+    });
+  };
   const handleEdit = (record) => {
     setEditModal(true);
     setSelectedRecord(record);
@@ -137,9 +62,16 @@ const Account = () => {
       okButtonProps: {
         style: { backgroundColor: "#F7685B", color: "white" },
       },
-      onOk: () => {
-        // Implement your delete logic here
-        console.log("Deleted", record);
+      onOk: async() => {
+        try {
+          await mutateAsync({ id: record.accountId });
+    
+          // If the deletion is successful, you can trigger a refetch
+          refetch();
+        } catch (error) {
+          console.error('Error deleting account', error);
+          // Handle error if needed
+        }
       },
       className: "DeleteAccountModal-footer",
     });
@@ -221,6 +153,7 @@ const Account = () => {
                 style={{ backgroundColor: "#C4C4C4", color: "#000", width: "14em" }}
                 placeholder="Search..."
                 className="custom-input"
+                onChange={(e) => setSearchText(e.target.value)}
               />
             </div>
             <div className="account-header__function">
@@ -238,14 +171,22 @@ const Account = () => {
           </div>
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={searchAccounts?.data?.content || []}
+            loading={searchAccountsLoading || isLoading}
             pagination={{
-              pageSize: 3,
+              ...pagination,
+              total: total,
+              showSizeChanger: false,
+              showQuickJumper: false,
+              onChange: (page) => {
+                setPagination({ ...pagination, current: page });
+              },
               style: {
                 display: "flex",
                 justifyContent: "center",
               },
             }}
+            onChange={handleTableChange}
           />
         </div>
       </div>
@@ -265,6 +206,7 @@ const Account = () => {
           setSelectedRecord(null);
         }}
         initialData={selectedRecord}
+        refetch={refetch}
       />
     </div>
   );
