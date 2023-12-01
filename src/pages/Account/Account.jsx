@@ -7,6 +7,8 @@ import { Space, Table, Tag, Input, Button, Modal } from "antd";
 import CreateAccountModal from "./components/CreateAccountModal/CreateAccountModal";
 import EditAccountModal from "./components/EditAccoutModal/EditAccountModal";
 import { useFetchAccounts } from "../../hooks/accounts/useFetchAccounts";
+import { useDeleteAccount } from "../../hooks/accounts/useDeleteAccount";
+import { useSearchAccounts } from "../../hooks/accounts/useSearchAccounts";
 
 const Account = () => {
   const [modals, SetModal] = useState(false);
@@ -17,10 +19,22 @@ const Account = () => {
     pageSize: 3,
   });
   const [total, setTotal] = useState(0);
+  const [searchText, setSearchText] = useState('');
 
-  const { data: fetchAccounts, isLoading } = useFetchAccounts(pagination.pageSize, pagination.current -1);
+  const { data: fetchAccounts, isLoading ,refetch} = useFetchAccounts(pagination.pageSize, pagination.current -1);
+  
   console.log(fetchAccounts);
-
+  const { mutateAsync } = useDeleteAccount();
+  const { data: searchAccounts, isLoading: searchAccountsLoading, refetch: searchAccountsRefetch } = useSearchAccounts(
+    searchText,
+    pagination.pageSize,
+    pagination.current - 1
+  );
+  useEffect(() => {
+    if (searchAccounts) {
+      setTotal(searchAccounts?.data?.totalElements || 0);
+    }
+  }, [searchAccounts]);
   useEffect(() => {
     if(fetchAccounts) {
       setTotal(fetchAccounts?.data?.totalElements || 0)
@@ -48,9 +62,16 @@ const Account = () => {
       okButtonProps: {
         style: { backgroundColor: "#F7685B", color: "white" },
       },
-      onOk: () => {
-        // Implement your delete logic here
-        console.log("Deleted", record);
+      onOk: async() => {
+        try {
+          await mutateAsync({ id: record.accountId });
+    
+          // If the deletion is successful, you can trigger a refetch
+          refetch();
+        } catch (error) {
+          console.error('Error deleting account', error);
+          // Handle error if needed
+        }
       },
       className: "DeleteAccountModal-footer",
     });
@@ -132,6 +153,7 @@ const Account = () => {
                 style={{ backgroundColor: "#C4C4C4", color: "#000", width: "14em" }}
                 placeholder="Search..."
                 className="custom-input"
+                onChange={(e) => setSearchText(e.target.value)}
               />
             </div>
             <div className="account-header__function">
@@ -149,8 +171,8 @@ const Account = () => {
           </div>
           <Table
             columns={columns}
-            dataSource={fetchAccounts?.data?.content || []}
-            loading={isLoading}
+            dataSource={searchAccounts?.data?.content || []}
+            loading={searchAccountsLoading || isLoading}
             pagination={{
               ...pagination,
               total: total,
@@ -184,6 +206,7 @@ const Account = () => {
           setSelectedRecord(null);
         }}
         initialData={selectedRecord}
+        refetch={refetch}
       />
     </div>
   );
