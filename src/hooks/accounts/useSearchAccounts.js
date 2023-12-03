@@ -1,7 +1,7 @@
 import axiosClient from "../../api/axiosClient";
 import { useQuery } from "react-query";
 
-const fetchSearchAccounts = async ({ emailOrName, pageSize, pageNo }) => {
+export const fetchSearchAccounts = async ({ emailOrName, pageSize, pageNo }) => {
   const response = await axiosClient.get("/api/v1/accounts", {
     params: {
       emailOrName,

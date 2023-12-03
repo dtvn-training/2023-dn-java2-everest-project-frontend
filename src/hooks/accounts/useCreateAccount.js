@@ -16,7 +16,7 @@ const useCreateAccount = () => {
 
   const mutation = useMutation((data) => createAccount(data, getAuthToken()), {
     onSuccess: () => {
-      queryClient.invalidateQueries("FETCH_LIST");
+      queryClient.invalidateQueries("SEARCH_LIST");
     },
   });
 

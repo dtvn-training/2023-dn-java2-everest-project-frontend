@@ -10,8 +10,6 @@ import { useFetchAccounts } from "../../hooks/accounts/useFetchAccounts";
 import { useDeleteAccount } from "../../hooks/accounts/useDeleteAccount";
 import { useSearchAccounts } from "../../hooks/accounts/useSearchAccounts";
 
-
-
 const Account = () => {
   const [modals, SetModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -22,29 +20,21 @@ const Account = () => {
     pageSize: 3,
   });
   const [total, setTotal] = useState(0);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
 
-  const { data: fetchAccounts, isLoading: fetchAccountsLoading ,refetch} = useFetchAccounts(pagination.pageSize, pagination.current -1);
-  
-  console.log(fetchAccounts);
   const { mutateAsync } = useDeleteAccount();
-  const { data: searchAccounts, isLoading: searchAccountsLoading, refetch: searchAccountsRefetch } = useSearchAccounts(
+  const { data: fetchAccounts, isFetching } = useSearchAccounts(
     searchText,
     pagination.pageSize,
     pagination.current - 1
   );
-  
+
   useEffect(() => {
-    if (searchAccounts) {
-      setTotal(searchAccounts?.data?.totalElements || 0);
+    if (fetchAccounts) {
+      setTotal(fetchAccounts?.data?.totalElements || 0);
     }
-  }, [searchAccounts]);
-  useEffect(() => {
-    if(fetchAccounts) {
-      setTotal(fetchAccounts?.data?.totalElements || 0)
-    }
-  },[fetchAccounts])
-  console.log(total);
+  }, [fetchAccounts]);
+
   const handleTableChange = (pagination, filters, sorter) => {
     setPagination({
       ...pagination,
@@ -52,6 +42,7 @@ const Account = () => {
       current: pagination.current || 1,
     });
   };
+
   const handleEdit = (record) => {
     setEditModal(true);
     setSelectedRecord(record);
@@ -59,25 +50,19 @@ const Account = () => {
 
   const handleDelete = async (record) => {
     // Add your delete logic here
-     Modal.confirm({
+    Modal.confirm({
       title: "Confirmination",
       content: "Please confirm that you want to delete everything.",
       okText: "Delete",
       okButtonProps: {
         style: { backgroundColor: "#F7685B", color: "white" },
       },
-      onOk: async() => {
+      onOk: async () => {
         try {
           await mutateAsync({ id: record.accountId });
-
           message.success("Account deleted successfully!");
-    
-          // If the deletion is successful, you can trigger a refetch
-          await refetch();
         } catch (error) {
-          console.error('Error deleting account', error);
-          // Handle error if needed
-          await refetch();
+          console.error("Error deleting account", error);
         }
       },
       className: "DeleteAccountModal-footer",
@@ -178,8 +163,8 @@ const Account = () => {
           </div>
           <Table
             columns={columns}
-            dataSource={searchAccounts?.data?.content || fetchAccounts?.data?.content || []}
-            loading={searchAccountsLoading || fetchAccountsLoading}
+            dataSource={fetchAccounts?.data?.content || []}
+            loading={isFetching}
             pagination={{
               ...pagination,
               total: total,
@@ -194,7 +179,6 @@ const Account = () => {
               },
             }}
             onChange={handleTableChange}
-            refetch={refetch}
           />
         </div>
       </div>
@@ -204,7 +188,6 @@ const Account = () => {
         handleCancel={() => {
           SetModal(!modals);
         }}
-        refetch={refetch}
       />
       <EditAccountModal
         isModalOpen={editModal}
@@ -215,7 +198,6 @@ const Account = () => {
           setSelectedRecord(null);
         }}
         initialData={selectedRecord}
-        refetch={refetch}
       />
     </div>
   );

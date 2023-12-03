@@ -11,10 +11,8 @@ const fetchAccounts = async (pageSize, pageNo) => {
   return response.data;
 };
 export const useFetchAccounts = (pageSize, pageNo) => {
-  
   return useQuery(["FETCH_LIST", pageSize, pageNo], () => fetchAccounts(pageSize, pageNo), {
     refetchOnWindowFocus: true,
     retry: 3,
   });
 };
-

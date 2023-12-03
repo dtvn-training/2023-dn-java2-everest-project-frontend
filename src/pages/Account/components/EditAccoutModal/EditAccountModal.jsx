@@ -6,7 +6,7 @@ import { useUpdataAccount } from "../../../../hooks/accounts/useUpdataAccount";
 
 const { Option } = Select;
 
-const EditAccountModal = ({ isModalOpen, refetch, handleOk, handleCancel, initialData }) => {
+const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) => {
   const [form] = useForm();
   const { mutateAsync } = useUpdataAccount();
   useEffect(() => {
@@ -49,7 +49,6 @@ const EditAccountModal = ({ isModalOpen, refetch, handleOk, handleCancel, initia
         id: initialData.accountId,
         record: initValue,
       });
-      await refetch();
       console.log("Data refetched successfully!");
       form.resetFields();
       handleCancel();
