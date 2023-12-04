@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Modal, Form, Input, Button, Select } from "antd";
+import { Modal, Form, Input, Button, Select, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import "./EditAccountModal.css";
 import { useUpdataAccount } from "../../../../hooks/accounts/useUpdataAccount";
@@ -45,10 +45,13 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
         phone: values.phone,
       };
       // Use your mutateAsync function to update the account
-      await mutateAsync({
+      const response = await mutateAsync({
         id: initialData.accountId,
         record: initValue,
       });
+      if (response?.code === 400) {
+        return message.error(response?.message);
+      }
       console.log("Data refetched successfully!");
       form.resetFields();
       handleCancel();

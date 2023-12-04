@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../api/axiosClient";
 import Dashboard from "../Dashboard/Dashboard";
 import Account from "../Account/Account";
+import { message } from "antd";
 
 const LOGIN_URL = "/api/v1/auth/login";
 
@@ -21,7 +22,6 @@ const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -55,15 +55,16 @@ const Signin = () => {
       console.log("accesstoken: " + accessToken);
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("username", response?.data?.username);
       setPassword("");
-      setSuccess(true);
+      message.success(response?.data?.message);
       navigate("/campaign");
     } else if (response.data.code === 400) {
       const errorMessage = response?.data?.message || "Login Failed";
-      setErrMsg(errorMessage);
+      message.error(errorMessage);
       errRef.current.focus();
     } else {
-      setErrMsg("No Server Response");
+      message.success("No Server Response");
       errRef.current.focus();
     }
   };
@@ -80,59 +81,49 @@ const Signin = () => {
   });
 
   return (
-    <>
-      {success ? (
-        <section>
-          <h1>You are logged in!</h1>
-          <br />
-          <Dashboard />
-        </section>
-      ) : (
-        <div className="container">
-          <div className="form-container">
-            <form onSubmit={formik.handleSubmit}>
-              <div className="form-title">WELCOME</div>
-              <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
-                {errMsg}
-              </p>
-              <div className="form-group">
-                <input
-                  type="email"
-                  id="email"
-                  ref={userRef}
-                  autoComplete="off"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.email}
-                  required
-                />
-                {formik.touched.email && formik.errors.email ? <p>{formik.errors.email}</p> : null}
-              </div>
-
-              <div className="form-group">
-                <input
-                  type="password"
-                  id="password"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.password}
-                  required
-                />
-                {formik.touched.password && formik.errors.password ? <p>{formik.errors.password}</p> : null}
-              </div>
-
-              <div className="login-butons">
-                <button type="submit">Sign In</button>
-                <div className="login-social">
-                  <button className="fb-login">Facebook</button>
-                  <button className="google-login">Google</button>
-                </div>
-              </div>
-            </form>
+    <div className="container">
+      <div className="form-container">
+        <form onSubmit={formik.handleSubmit}>
+          <div className="form-title">WELCOME</div>
+          <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
+            {errMsg}
+          </p>
+          <div className="form-group">
+            <input
+              type="email"
+              id="email"
+              ref={userRef}
+              autoComplete="off"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              required
+            />
+            {formik.touched.email && formik.errors.email ? <p>{formik.errors.email}</p> : null}
           </div>
-        </div>
-      )}
-    </>
+
+          <div className="form-group">
+            <input
+              type="password"
+              id="password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              required
+            />
+            {formik.touched.password && formik.errors.password ? <p>{formik.errors.password}</p> : null}
+          </div>
+
+          <div className="login-butons">
+            <button type="submit">Sign In</button>
+            <div className="login-social">
+              <button className="fb-login">Facebook</button>
+              <button className="google-login">Google</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

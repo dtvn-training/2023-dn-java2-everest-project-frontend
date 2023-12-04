@@ -21,7 +21,7 @@ const Dashboardleft = () => {
       </button>
       <div className="left-item__user-info">
         <div className="info-img"></div>
-        <div className="info-name">User name</div>
+        <div className="info-name">{window.localStorage.getItem("username")}</div>
       </div>
       {Object.keys(pageMappings).map((path) => (
         <Link to={path} key={path} className={`left-item ${location.pathname === path ? "active" : ""}`}>

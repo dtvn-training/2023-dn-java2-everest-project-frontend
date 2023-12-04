@@ -32,7 +32,7 @@
   gap: 10px;
 }
 
-.account-header__function > button {
+.account-header__function>button {
   display: block;
 }
 
@@ -108,4 +108,37 @@
 
 .DeleteAccountModal-footer button {
   max-width: 100px;
+}
+
+.action-buttons {
+  display: flex;
+}
+
+.edit-button,
+.delete-button {
+  color: #fff;
+  width: 45%;
+  margin-right: 5px;
+}
+
+.edit-button {
+  background-color: #48BB6A;
+}
+
+.delete-button {
+  background-color: #F7685B;
+}
+
+@media (max-width: 1200px) {
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .edit-button,
+  .delete-button {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
 }

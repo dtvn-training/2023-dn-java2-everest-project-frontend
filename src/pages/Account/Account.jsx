@@ -80,7 +80,20 @@ const Account = () => {
       dataIndex: "username",
       key: "username",
       align: "center",
-      render: (_, record) => <span>{`${record.firstname} ${record.lastname}`}</span>,
+      width: 300,
+      render: (_, record) => (
+        <div
+          style={{
+            maxWidth: 250,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            textAlign: "center",
+          }}
+        >
+          {`${record.firstname} ${record.lastname}`}
+        </div>
+      ),
     },
     {
       title: "Email",
@@ -111,20 +124,13 @@ const Account = () => {
       dataIndex: "action",
       key: "action",
       align: "center",
+      width: 250,
       render: (_, record) => (
         <div>
-          <Button
-            type="default"
-            onClick={() => handleEdit(record)}
-            style={{ backgroundColor: "#468FAF", color: "#fff" }}
-          >
+          <Button type="default" onClick={() => handleEdit(record)} className="edit-button">
             Edit
           </Button>{" "}
-          <Button
-            type="default"
-            onClick={() => handleDelete(record)}
-            style={{ backgroundColor: "#468FAF", color: "#fff" }}
-          >
+          <Button type="default" onClick={() => handleDelete(record)} className="delete-button">
             Delete
           </Button>
         </div>

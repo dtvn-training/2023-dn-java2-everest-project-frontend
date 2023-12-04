@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, Select,message } from "antd";
+import { Modal, Form, Input, Button, Select, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import "./CreateAccountModal.css";
 import { nameRegex, addressRegex, emailRegex, phoneRegex } from "../../../../utils/RegularExpression";
@@ -8,7 +8,6 @@ import useCreateAccount from "../../../../hooks/accounts/useCreateAccount";
 const { Option } = Select;
 const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const [form] = useForm();
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
   const formItemLayout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 16 },
@@ -42,21 +41,18 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
         address: values.address,
         phone: values.phone,
       };
-      await createAccount(requestData);
-      console.log("request",requestData);
+      const response = await createAccount(requestData);
+      console.log("request", requestData);
+      if (response?.code === 400) {
+        return message.error(response?.message);
+      }
       form.resetFields();
       showSuccessMessage();
-      setIsSuccessModalVisible(true);
       handleOk();
     } catch (error) {
       console.error("Error creating account", error);
       // Handle error if needed
     }
-  };
-
-  const handleSuccessModalOk = () => {
-    setIsSuccessModalVisible(false);
-    handleOk();
   };
 
   return (
@@ -303,16 +299,7 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
           />
         </Form.Item>
       </Form>
-      <Modal
-        title="Success"
-        visible={isSuccessModalVisible}
-        onOk={handleSuccessModalOk}
-        onCancel={() => setIsSuccessModalVisible(false)}
-      >
-        <p>Account created successfully!</p>
-      </Modal>
     </Modal>
-    
   );
 };
 
