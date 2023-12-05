@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 const fetchAccounts = async (pageSize, pageNo) => {
   const accessToken = window.localStorage.getItem("accessToken");
 
-  const response = await axiosClient.get("/api/v1/accounts", {
+  const response = await axiosClient.get("/api/v1/accounts/getAllAccount", {
     params: {
       pageSize,
       pageNo,
