@@ -2,11 +2,16 @@ import axiosClient from "../../api/axiosClient";
 import { useQuery } from "react-query";
 
 export const fetchSearchAccounts = async ({ emailOrName, pageSize, pageNo }) => {
+  const accessToken = window.localStorage.getItem("accessToken");
+
   const response = await axiosClient.get("/api/v1/accounts", {
     params: {
       emailOrName,
       pageSize,
       pageNo,
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   return response.data;

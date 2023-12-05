@@ -1,4 +1,3 @@
-// useCreateAccount.js
 import axiosClient from "../../api/axiosClient";
 import { useMutation, useQueryClient } from "react-query";
 
