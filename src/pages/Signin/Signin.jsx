@@ -49,12 +49,12 @@ const Signin = () => {
     });
     console.log(response);
     if (response.data.code === 200) {
-      const accessToken = response?.data?.access_token;
-      const refreshToken = response?.data?.refresh_token;
       setEmail("");
-      console.log("accesstoken: " + accessToken);
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      console.log("accesstoken: " + response?.data?.access_token);
+      localStorage.setItem("accessToken", response?.data?.access_token);
+      localStorage.setItem("refreshToken", response?.data?.refresh_token);
+      localStorage.setItem("access_token_expires", response?.data?.access_token_expires_in);
+      localStorage.setItem("last_logged_time", Date.now());
       localStorage.setItem("username", response?.data?.username);
       setPassword("");
       message.success(response?.data?.message);
