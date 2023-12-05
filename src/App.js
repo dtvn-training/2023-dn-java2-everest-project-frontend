@@ -10,10 +10,9 @@ import Campaign from "./pages/Campaign/Campaign";
 function App() {
   const navigate = useNavigate();
   const isTokenExpired = () => {
-    // Lấy thời hạn của token từ localStorage
     const expiresIn = localStorage.getItem("access_token_expires");
     console.log(expiresIn);
-    // Kiểm tra xem token có hết hạn hay không
+    if (expiresIn === null) return true;
     if (expiresIn) {
       const currentTime = Date.now();
       const expirationTime = parseInt(expiresIn, 10);
@@ -24,11 +23,8 @@ function App() {
     console.log("false");
     return false; // Token chưa hết hạn
   };
-
-  // Sử dụng useEffect để kiểm tra token mỗi khi component được render
   useEffect(() => {
     if (isTokenExpired()) {
-      // Nếu token đã hết hạn, chuyển hướng về trang đăng nhập
       navigate("/");
     }
   }, [navigate]);
