@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../api/axiosClient";
 import Dashboard from "../Dashboard/Dashboard";
 import Account from "../Account/Account";
-import { message } from "antd";
+import { message, Spin } from "antd";
 
 const LOGIN_URL = "/api/v1/auth/login";
 
@@ -22,6 +22,7 @@ const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -42,30 +43,38 @@ const Signin = () => {
   }
 
   const handleSubmit = async (values) => {
+    setLoading(true);
     console.log(values);
-    const response = await axios.post(LOGIN_URL, values, {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-    });
-    console.log(response);
-    if (response.data.code === 200) {
-      setEmail("");
-      console.log("accesstoken: " + response?.data?.access_token);
-      localStorage.setItem("accessToken", response?.data?.access_token);
-      localStorage.setItem("refreshToken", response?.data?.refresh_token);
-      localStorage.setItem("access_token_expires", response?.data?.access_token_expires_in);
-      localStorage.setItem("last_logged_time", Date.now());
-      localStorage.setItem("username", response?.data?.username);
-      setPassword("");
-      message.success(response?.data?.message);
-      navigate("/campaign");
-    } else if (response.data.code === 400) {
-      const errorMessage = response?.data?.message || "Login Failed";
-      message.error(errorMessage);
-      errRef.current.focus();
-    } else {
-      message.success("No Server Response");
-      errRef.current.focus();
+    try {
+      const response = await axios.post(LOGIN_URL, values, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+      console.log(response);
+      if (response.data.code === 200) {
+        setEmail("");
+        console.log("accesstoken: " + response?.data?.access_token);
+        localStorage.setItem("accessToken", response?.data?.access_token);
+        localStorage.setItem("refreshToken", response?.data?.refresh_token);
+        localStorage.setItem("access_token_expires", response?.data?.access_token_expires_in);
+        localStorage.setItem("last_logged_time", Date.now());
+        localStorage.setItem("username", response?.data?.username);
+        setPassword("");
+        message.success(response?.data?.message);
+        navigate("/campaign");
+      } else if (response.data.code === 400) {
+        const errorMessage = response?.data?.message || "Login Failed";
+        message.error(errorMessage);
+        errRef.current.focus();
+      } else {
+        message.error("No Server Response");
+        errRef.current.focus();
+      }
+      setLoading(false);
+    } catch (e) {
+      message.error("Unknown error. Contact your administrator for support.");
+    } finally {
+      setLoading(false);
     }
   };
   const formik = useFormik({
@@ -82,47 +91,49 @@ const Signin = () => {
 
   return (
     <div className="container">
-      <div className="form-container">
-        <form onSubmit={formik.handleSubmit}>
-          <div className="form-title">WELCOME</div>
-          <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
-            {errMsg}
-          </p>
-          <div className="form-group">
-            <input
-              type="email"
-              id="email"
-              ref={userRef}
-              autoComplete="off"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.email}
-              required
-            />
-            {formik.touched.email && formik.errors.email ? <p>{formik.errors.email}</p> : null}
-          </div>
-
-          <div className="form-group">
-            <input
-              type="password"
-              id="password"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.password}
-              required
-            />
-            {formik.touched.password && formik.errors.password ? <p>{formik.errors.password}</p> : null}
-          </div>
-
-          <div className="login-butons">
-            <button type="submit">Sign In</button>
-            <div className="login-social">
-              <button className="fb-login">Facebook</button>
-              <button className="google-login">Google</button>
+      <Spin spinning={loading}>
+        <div className="form-container">
+          <form onSubmit={formik.handleSubmit}>
+            <div className="form-title">WELCOME</div>
+            <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">
+              {errMsg}
+            </p>
+            <div className="form-group">
+              <input
+                type="email"
+                id="email"
+                ref={userRef}
+                autoComplete="off"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+                required
+              />
+              {formik.touched.email && formik.errors.email ? <p>{formik.errors.email}</p> : null}
             </div>
-          </div>
-        </form>
-      </div>
+
+            <div className="form-group">
+              <input
+                type="password"
+                id="password"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+                required
+              />
+              {formik.touched.password && formik.errors.password ? <p>{formik.errors.password}</p> : null}
+            </div>
+
+            <div className="login-butons">
+              <button type="submit">Sign In</button>
+              <div className="login-social">
+                <button className="fb-login">Facebook</button>
+                <button className="google-login">Google</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </Spin>
     </div>
   );
 };

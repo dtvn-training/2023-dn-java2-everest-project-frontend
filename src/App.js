@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./App.css";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Signin from "./pages/Signin/Signin";
@@ -6,10 +6,13 @@ import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import NotFound from "./pages/NotFound/NotFound";
 import Account from "./pages/Account/Account";
 import Campaign from "./pages/Campaign/Campaign";
+import { Modal } from "antd";
 
 function App() {
   const navigate = useNavigate();
-  const isTokenExpired = () => {
+  const [isLoginPage, setIsLoginPage] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const isTokenExpired = useCallback(() => {
     const expiresIn = localStorage.getItem("access_token_expires");
     console.log(expiresIn);
     if (expiresIn === null) return true;
@@ -22,20 +25,40 @@ function App() {
     }
     console.log("false");
     return false; // Token chưa hết hạn
-  };
+  }, []);
   useEffect(() => {
-    if (isTokenExpired()) {
-      navigate("/");
+    setIsLoginPage(window.location.pathname === "/");
+  }, []);
+  useEffect(() => {
+    if (isTokenExpired() && !isLoginPage && !isModalVisible) {
+      setIsModalVisible(true);
+    } else if (!isTokenExpired() && isModalVisible) {
+      setIsModalVisible(false);
     }
-  }, [navigate]);
+  }, [isTokenExpired, isLoginPage, isModalVisible]);
+
+  const handleModalOk = () => {
+    setIsModalVisible(false);
+    navigate("/");
+  };
   return (
-    <Routes>
-      <Route path="/" element={<Signin />} />
-      <Route path="/account" element={isTokenExpired() ? <Navigate to="/" /> : <Account />} />
-      <Route path="/dashboard" element={isTokenExpired() ? <Navigate to="/" /> : <Dashboard />} />
-      <Route path="/campaign" element={isTokenExpired() ? <Navigate to="/" /> : <Campaign />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <div>
+      <Routes>
+        <Route path="/" element={<Signin />} />
+        <Route path="/account" element={isTokenExpired() ? <Navigate to="/" /> : <Account />} />
+        <Route path="/dashboard" element={isTokenExpired() ? <Navigate to="/" /> : <Dashboard />} />
+        <Route path="/campaign" element={isTokenExpired() ? <Navigate to="/" /> : <Campaign />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Modal
+        title="Session Expired"
+        visible={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={() => setIsModalVisible(false)}
+      >
+        <p>Your session has expired. Please log in again.</p>
+      </Modal>
+    </div>
   );
 }
 
