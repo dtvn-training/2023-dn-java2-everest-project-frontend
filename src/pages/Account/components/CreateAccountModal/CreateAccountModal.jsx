@@ -4,10 +4,12 @@ import { useForm } from "antd/lib/form/Form";
 import "./CreateAccountModal.css";
 import { nameRegex, addressRegex, emailRegex, phoneRegex } from "../../../../utils/RegularExpression";
 import useCreateAccount from "../../../../hooks/accounts/useCreateAccount";
+import { useFetchRoles } from "../../../../hooks/accounts/useFetchRoles";
 
 const { Option } = Select;
 const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const [form] = useForm();
+  const { data: fetchRoles } = useFetchRoles();
   const formItemLayout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 16 },
@@ -15,16 +17,6 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const styledInput = {
     marginLeft: "2.5em",
   };
-  const roles = [
-    {
-      role_id: "1",
-      role_name: "ADMIN",
-    },
-    {
-      role_id: "2",
-      role_name: "DAC",
-    },
-  ];
   const { createAccount } = useCreateAccount();
   const showSuccessMessage = () => {
     message.success("Account created successfully");
@@ -147,8 +139,8 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
           hasFeedback
         >
           <Select style={styledInput} onBlur={() => form.validateFields(["role"])}>
-            {roles.map((role) => (
-              <Option key={role.role_id} value={role.role_name}>
+            {fetchRoles.data.map((role) => (
+              <Option key={role.roleId} value={role.roleName}>
                 {role.role_name}
               </Option>
             ))}

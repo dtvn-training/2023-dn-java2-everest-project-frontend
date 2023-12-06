@@ -4,12 +4,14 @@ import { useForm } from "antd/lib/form/Form";
 import "./EditAccountModal.css";
 import { useUpdataAccount } from "../../../../hooks/accounts/useUpdataAccount";
 import { nameRegex, addressRegex, phoneRegex } from "../../../../utils/RegularExpression";
+import { useFetchRoles } from "../../../../hooks/accounts/useFetchRoles";
 
 const { Option } = Select;
 
 const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) => {
   const [form] = useForm();
   const { mutateAsync } = useUpdataAccount();
+  const { data: fetchRoles } = useFetchRoles();
   useEffect(() => {
     if (initialData) {
       form.setFieldsValue(initialData);
@@ -23,20 +25,6 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
   const styledInput = {
     marginLeft: "2.5em",
   };
-  const styledDisabledInput = {
-    ...styledInput,
-    backgroundColor: "#ccc",
-  };
-  const roles = [
-    {
-      role_id: "1",
-      role_name: "ADMIN",
-    },
-    {
-      role_id: "2",
-      role_name: "DAC",
-    },
-  ];
   const onFinish = async (values) => {
     try {
       console.log(values);
@@ -141,8 +129,8 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
           hasFeedback
         >
           <Select style={styledInput}>
-            {roles.map((role) => (
-              <Option key={role.role_id} value={role.role_name}>
+            {fetchRoles.data.map((role) => (
+              <Option key={role.roleId} value={role.roleName}>
                 {role.role_name}
               </Option>
             ))}
