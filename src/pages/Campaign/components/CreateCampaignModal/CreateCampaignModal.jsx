@@ -124,7 +124,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
             {
               required: false,
             },
-            
+
             {
               validator: validateName,
             },
@@ -250,7 +250,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
         </Form.Item>
         {imageUrl && (
           <Form.Item label="Preview Image">
-            <div style={{ width: "1200px", height: "132px", overflow: "hidden", marginLeft: "2.5em" }}>
+            <div style={{ overflow: "hidden", marginLeft: "2.5em" }}>
               <Image src={imageUrl} alt="Uploaded" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             </div>
           </Form.Item>
