@@ -28,3 +28,7 @@
 .ant-table-cell::before {
   background-color: transparent !important;
 }
+
+.custom-collapse .ant-collapse-arrow {
+  color: #fff !important;
+}
