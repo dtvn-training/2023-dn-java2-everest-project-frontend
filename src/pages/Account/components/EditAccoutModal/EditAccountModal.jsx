@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button, Select, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import "./EditAccountModal.css";
 import { useUpdataAccount } from "../../../../hooks/accounts/useUpdataAccount";
-import { nameRegex, addressRegex, emailRegex, phoneRegex } from "../../../../utils/RegularExpression";
+import { nameRegex, addressRegex, phoneRegex } from "../../../../utils/RegularExpression";
 
 const { Option } = Select;
 
@@ -22,6 +22,10 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
   };
   const styledInput = {
     marginLeft: "2.5em",
+  };
+  const styledDisabledInput = {
+    ...styledInput,
+    backgroundColor: "#ccc",
   };
   const roles = [
     {
@@ -121,23 +125,8 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
         >
           <Input style={styledInput} onBlur={() => form.validateFields(["lastname"])} />
         </Form.Item>
-        <Form.Item
-          label="Email"
-          name="email"
-          className="custom-label-input"
-          rules={[
-            {
-              required: true,
-              message: "Please input an email!",
-            },
-            {
-              message: "Please input a valid email!",
-              pattern: emailRegex,
-            },
-          ]}
-          hasFeedback
-        >
-          <Input style={styledInput} onBlur={() => form.validateFields(["email"])} />
+        <Form.Item label="Email" name="email" className="custom-label-input" hasFeedback>
+          <Input disabled style={styledInput} />
         </Form.Item>
         <Form.Item
           label="Role"
@@ -173,6 +162,7 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
               pattern: addressRegex,
             },
           ]}
+          hasFeedback
         >
           <Input style={styledInput} onBlur={() => form.validateFields(["address"])} />
         </Form.Item>
