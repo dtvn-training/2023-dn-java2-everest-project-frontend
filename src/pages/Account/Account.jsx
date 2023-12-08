@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { debounce } from "lodash";
 import "./Account.css";
 import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
 import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
@@ -28,6 +29,7 @@ const Account = () => {
     pagination.pageSize,
     pagination.current - 1
   );
+  const debouncedSetSearchText = debounce((text) => setSearchText(text), 500);
 
   useEffect(() => {
     if (fetchAccounts) {
@@ -151,7 +153,7 @@ const Account = () => {
                 style={{ backgroundColor: "#C4C4C4", color: "#000", width: "14em" }}
                 placeholder="Search..."
                 className="custom-input"
-                onChange={(e) => setSearchText(e.target.value)}
+                onChange={(e) => debouncedSetSearchText(e.target.value)}
               />
             </div>
             <div className="account-header__function">
