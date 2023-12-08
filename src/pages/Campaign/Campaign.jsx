@@ -4,66 +4,96 @@ import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
 import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
 import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
 import CreateCampaignModal from "./components/CreateCampaignModal/CreateCampaignModal";
-import { Space, Table, Tag, Input, Button, Modal } from "antd";
-import { Route, Routes } from "react-router-dom";
-import axios from "axios";
+import { Table, Input, Button, Modal } from "antd";
+import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
+import moment from "moment";
+
 const Campaign = () => {
   const [editModal, setEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const [data, setData] = useState(null);
-  // const data = [
-  //   {
-  //     campaignname: "Campaign 1",
-  //     status: "true",
-  //     usagerate: "0.5%",
-  //     budget: "100000",
-  //     startdate: "2024-12-01 10:00",
-  //     enddate: "2024-12-01 10:00",
-  //   },
-  // ];
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 3,
+  });
+  const [total, setTotal] = useState(0);
+  const [searchText, setSearchText] = useState("");
+  const { data: fetchCampaigns, isFetching } = useSearchCampaign(
+    searchText,
+    pagination.pageSize,
+    pagination.current - 1
+  );
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("https://65682b389927836bd9742d04.mockapi.io/api/v1/accounts/campaign");
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+    if (fetchCampaigns) {
+      setTotal(fetchCampaigns?.data?.totalElements || 0);
+    }
+  }, [fetchCampaigns]);
+  const handleTableChange = (pagination, filters, sorter) => {
+    setPagination({
+      ...pagination,
+      pageSize: pagination.pageSize || 3,
+      current: pagination.current || 1,
+    });
+  };
 
-    fetchData();
-  }, []);
   const columns = [
     {
       title: "Campaign Name",
-      dataIndex: "campaignname",
+      dataIndex: "name",
       key: "campaignname",
-      // render: (_, record) => <span>{`${record.firstname} ${record.lastname}`}</span>,
+      align: "center",
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      align: "center",
+      render: (_, record) => (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              border: `2px solid ${record.status ? "green" : "red"}`,
+              backgroundColor: "transparent",
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      title: "Used Amount",
+      dataIndex: "usedAmount",
+      key: "usedamount",
+      align: "center",
+      render: (_, record) => <div>{`¥ ${record.usedAmount}`}</div>,
     },
     {
       title: "Usage Rate",
-      dataIndex: "usagerate",
+      dataIndex: "usageRate",
       key: "usagerate",
+      align: "center",
+      render: (_, record) => <div>{` ${record.usageRate}%`}</div>,
     },
     {
       title: "budget",
       dataIndex: "budget",
       key: "budget",
+      align: "center",
     },
     {
       title: "Start Date",
-      dataIndex: "startdate",
+      dataIndex: "startDate",
       key: "startdate",
+      align: "center",
+      render: (_, record) => <div>{moment.utc(record.startDate).format("YYYY-MM-DD HH:mm")}</div>,
     },
     {
       title: "End date",
-      dataIndex: "enddate",
+      dataIndex: "endDate",
       key: "enddate",
+      align: "center",
+      render: (_, record) => <div>{moment.utc(record.endDate).format("YYYY-MM-DD HH:mm")}</div>,
     },
   ];
 
@@ -98,14 +128,22 @@ const Campaign = () => {
           </div>
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={fetchCampaigns?.data?.content || []}
+            loading={isFetching}
             pagination={{
-              pageSize: 3,
+              ...pagination,
+              total: total,
+              showSizeChanger: false,
+              showQuickJumper: false,
+              onChange: (page) => {
+                setPagination({ ...pagination, current: page });
+              },
               style: {
                 display: "flex",
                 justifyContent: "center",
               },
             }}
+            onChange={handleTableChange}
           />
         </div>
       </div>
