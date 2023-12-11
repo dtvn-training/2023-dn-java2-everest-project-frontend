@@ -48,6 +48,7 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
       }
       console.log("Data refetched successfully!");
       form.resetFields();
+      message.success(response?.message);
       handleCancel();
     } catch (error) {
       console.error("Form submission error:", error);

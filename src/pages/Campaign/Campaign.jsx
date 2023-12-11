@@ -4,11 +4,34 @@ import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
 import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
 import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
 import CreateCampaignModal from "./components/CreateCampaignModal/CreateCampaignModal";
-import { Table, Input, Button, Modal } from "antd";
+import { Table, Input, Button, Modal, DatePicker } from "antd";
 import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
 import moment from "moment";
 
 const Campaign = () => {
+  const [startDate, setStartDate] = useState(null);
+
+  const disabledEndDate = (current) => {
+    return startDate ? current && current < moment(startDate).endOf("day") : false;
+  };
+
+  const disabledEndDateTime = (current, type) => {
+    if (type === "start") {
+      return false;
+    }
+
+    if (!startDate) {
+      return true;
+    }
+
+    const endOfDay = moment(startDate).endOf("day");
+
+    return current && current < endOfDay;
+  };
+
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+  };
   const [editModal, setEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [pagination, setPagination] = useState({
@@ -32,6 +55,31 @@ const Campaign = () => {
       ...pagination,
       pageSize: pagination.pageSize || 3,
       current: pagination.current || 1,
+    });
+  };
+  const handleEdit = (record) => {
+    setEditModal(true);
+    setSelectedRecord(record);
+  };
+
+  const handleDelete = async (record) => {
+    // Add your delete logic here
+    Modal.confirm({
+      title: "Confirmination",
+      content: "Please confirm that you want to delete everything.",
+      okText: "Delete",
+      okButtonProps: {
+        style: { backgroundColor: "#F7685B", color: "white" },
+      },
+      onOk: async () => {
+        try {
+          // await mutateAsync({ id: record.accountId });
+          // message.success("Account deleted successfully!");
+        } catch (error) {
+          console.error("Error deleting account", error);
+        }
+      },
+      className: "DeleteAccountModal-footer",
     });
   };
 
@@ -95,6 +143,23 @@ const Campaign = () => {
       align: "center",
       render: (_, record) => <div>{moment.utc(record.endDate).format("YYYY-MM-DD HH:mm")}</div>,
     },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      align: "center",
+      width: 250,
+      render: (_, record) => (
+        <div>
+          <Button type="default" onClick={() => handleEdit(record)} className="edit-button">
+            Edit
+          </Button>{" "}
+          <Button type="default" onClick={() => handleDelete(record)} className="delete-button">
+            Delete
+          </Button>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -106,24 +171,43 @@ const Campaign = () => {
         <div className="content">
           <div className="campaign-header">
             <div>
+              <div className="date-picker">
+                <div className="date-picker-label">Start Date:</div>
+                <DatePicker
+                  showTime={{ format: "HH:mm" }}
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="Select Start Date"
+                  onChange={handleStartDateChange}
+                />
+                <div className="date-picker-label">End Date:</div>
+                <DatePicker
+                  showTime={{ format: "HH:mm" }}
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder="Select End Date"
+                  disabledDate={disabledEndDate}
+                  disabledTime={(current, type) => disabledEndDateTime(current, type)}
+                />
+              </div>
+            </div>
+            <div className="campaign-header__function">
               <Input
                 type="text"
                 style={{ backgroundColor: "#C4C4C4", color: "#000", width: "14em" }}
                 placeholder="Search..."
                 className="custom-input"
               />
-            </div>
-            <div className="account-header__function">
-              <Button type="default" style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}>
-                Export CSV
-              </Button>
-              <Button
-                onClick={() => setEditModal(true)}
-                type="default"
-                style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}
-              >
-                Create Campaign
-              </Button>
+              <div className="campaign-function-button">
+                <Button type="default" style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}>
+                  Export CSV
+                </Button>
+                <Button
+                  onClick={() => setEditModal(true)}
+                  type="default"
+                  style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}
+                >
+                  Create Campaign
+                </Button>
+              </div>
             </div>
           </div>
           <Table

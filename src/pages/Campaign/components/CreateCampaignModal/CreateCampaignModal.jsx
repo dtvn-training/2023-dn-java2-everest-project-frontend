@@ -1,26 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Upload, Select, Button, Image, Modal, Collapse } from "antd";
+import { Form, Input, Upload, Select, Button, Image, Modal, Collapse, DatePicker } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useDropzone } from "react-dropzone";
 import Resizer from "react-image-file-resizer";
 import { UploadOutlined } from "@ant-design/icons";
 import "./CreateCampaignModal.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { setHours, setMinutes } from "date-fns";
+import moment from "moment";
+import useCreateCampaign from "../../../../hooks/campaigns/useCreateCampaign";
 
 const { Option } = Select;
 const { Panel } = Collapse;
 const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }) => {
   const [form] = useForm();
-  const editFlag = false;
+  const [startDate, setStartDate] = useState(null);
 
-  const [startDate, setStartDate] = React.useState(setHours(setMinutes(new Date(), 0), 9));
-  const [endDate, setEndDate] = React.useState(setHours(setMinutes(new Date(), 0), 18));
+  const disabledEndDate = (current) => {
+    return startDate ? current && current < moment(startDate).endOf("day") : false;
+  };
 
-  const initialMinTime = editFlag ? setHours(setMinutes(new Date(), 0), 18) : setHours(setMinutes(new Date(), 0), 0);
-  const [minTime, setMinTime] = React.useState(initialMinTime);
-  const [maxTime, setMaxTime] = React.useState(setHours(setMinutes(new Date(), 59), 23));
+  const disabledEndDateTime = (current, type) => {
+    if (type === "start") {
+      return false;
+    }
+
+    if (!startDate) {
+      return true;
+    }
+
+    const endOfDay = moment(startDate).endOf("day");
+
+    return current && current < endOfDay;
+  };
+
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+  };
+  const { createCampaign, isLoading, isError, error } = useCreateCampaign();
+
   const styledInput = {
     marginLeft: "2.5em",
   };
@@ -34,6 +50,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
       status_name: "INACTIVE",
     },
   ];
+
   const formItemLayout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 16 },
@@ -95,9 +112,31 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
 
     return Promise.resolve();
   };
-  const [imageUrl, setImageUrl] = React.useState(null);
-  const onFinish = (values) => {
+  const [imageUrl, setImageUrl] = useState(null);
+  const onFinish = async (values) => {
     console.log("Received values:", values);
+    try {
+      const formData = new FormData();
+
+      // Add your form values to formData
+      formData.append("name", values.name);
+      formData.append("userstatus", values.userstatus);
+      // Add other form fields as needed
+
+      // Append image file to formData
+      if (values.createpreview && values.createpreview.length > 0) {
+        formData.append("file", values.createpreview[0].originFileObj);
+      }
+
+      // Add additional fields if needed
+
+      // Call the createCampaign function from the hook
+      await createCampaign(formData);
+
+      // Handle success if needed
+    } catch (error) {
+      // Handle error if needed
+    }
   };
   const beforeUpload = (file) => {
     const reader = new FileReader();
@@ -199,37 +238,19 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
               <div className="date-picker-container">
                 <Form.Item label="Start date" name="startdate">
                   <DatePicker
-                    selected={startDate}
-                    showTimeSelect
-                    onChange={(date) => {
-                      if (date.getDate() === new Date().getDate()) {
-                        setMinTime(setHours(setMinutes(new Date(), 0), 18));
-                      } else {
-                        setMinTime(setHours(setMinutes(new Date(), 0), 0));
-                      }
-                      setStartDate(date);
-                    }}
-                    minTime={editFlag ? minTime : false}
-                    maxTime={editFlag ? maxTime : false}
-                    timeIntervals={1}
-                    dateFormat="yyyy-MM-dd hh:mm aa"
-                    todayButton={"TODAY"}
-                    className="custom-date-picker"
+                    showTime={{ format: "HH:mm" }}
+                    format="YYYY-MM-DD HH:mm"
+                    placeholder="Select Start Date"
+                    onChange={handleStartDateChange}
                   />
                 </Form.Item>
                 <Form.Item label="End date" name="enddate">
                   <DatePicker
-                    selected={endDate}
-                    showTimeSelect
-                    onChange={(date) => {
-                      setEndDate(date);
-                    }}
-                    minTime={editFlag ? minTime : false}
-                    maxTime={editFlag ? maxTime : false}
-                    timeIntervals={1}
-                    dateFormat="yyyy-MM-dd hh:mm aa"
-                    todayButton={"TODAY"}
-                    className="custom-date-picker"
+                    showTime={{ format: "HH:mm" }}
+                    format="YYYY-MM-DD HH:mm"
+                    placeholder="Select End Date"
+                    disabledDate={disabledEndDate}
+                    disabledTime={(current, type) => disabledEndDateTime(current, type)}
                   />
                 </Form.Item>
               </div>

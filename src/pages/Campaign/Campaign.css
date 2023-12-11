@@ -17,18 +17,38 @@
   padding: 2em;
   background-color: white;
 }
+
+.campaign-header__function {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .campaign-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  flex-direction: row;
+  flex-direction: column;
   margin-bottom: 10px;
 }
+
 .ant-table-thead tr {
   background-color: #468faf;
   color: #ffff !important;
   font-weight: bold;
 }
+
 .ant-modal {
   margin-top: -74px;
+}
+
+.date-picker {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.campaign-function-button {
+  display: flex;
+  gap: 15px;
 }
