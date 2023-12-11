@@ -8,6 +8,7 @@ import "./Dashboard.css";
 import moment from "moment";
 import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
 import { Table, Input, Button, Modal, DatePicker } from "antd";
+import { debounce } from "lodash";
 
 const onChange = (value, dateString) => {
   console.log("Selected Time: ", value);
@@ -30,6 +31,7 @@ const Dashboard = () => {
     pagination.pageSize,
     pagination.current - 1
   );
+  const debouncedSetSearchText = debounce((text) => setSearchText(text), 1500);
 
   useEffect(() => {
     if (fetchCampaigns) {
@@ -130,6 +132,7 @@ const Dashboard = () => {
                 style={{ backgroundColor: "#C4C4C4", color: "#000", width: "14em" }}
                 placeholder="Search..."
                 className="custom-input"
+                onChange={(e) => debouncedSetSearchText(e.target.value)}
               />
             </div>
             <div className="dashboard-header__function">

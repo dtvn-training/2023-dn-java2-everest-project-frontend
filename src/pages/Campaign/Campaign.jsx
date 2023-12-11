@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { debounce } from "lodash";
 import "./Campaign.css";
 import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
 import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
@@ -9,8 +10,10 @@ import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
 import moment from "moment";
 import "moment-timezone";
 import { useDeleteCampaign } from "../../hooks/campaigns/useDeteleCampaign";
+import EditCampaignModal from "./components/EditCampaignModal/EditCampaignModal";
 
 const Campaign = () => {
+  const [modals, SetModal] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const { mutateAsync } = useDeleteCampaign();
 
@@ -48,6 +51,8 @@ const Campaign = () => {
     pagination.pageSize,
     pagination.current - 1
   );
+  const debouncedSetSearchText = debounce((text) => setSearchText(text), 1500);
+
   useEffect(() => {
     if (fetchCampaigns) {
       setTotal(fetchCampaigns?.data?.totalElements || 0);
@@ -78,7 +83,7 @@ const Campaign = () => {
         try {
           console.log(record.campaignId);
           await mutateAsync({ id: record.campaignId });
-          message.success(" deleted successfully!");
+          message.success("Campaign Deleted Successfully");
         } catch (error) {
           console.error("Error deleting campaign", error);
         }
@@ -199,13 +204,14 @@ const Campaign = () => {
                 style={{ backgroundColor: "#C4C4C4", color: "#000", width: "14em" }}
                 placeholder="Search..."
                 className="custom-input"
+                onChange={(e) => debouncedSetSearchText(e.target.value)}
               />
               <div className="campaign-function-button">
                 <Button type="default" style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}>
                   Export CSV
                 </Button>
                 <Button
-                  onClick={() => setEditModal(true)}
+                  onClick={() => SetModal(true)}
                   type="default"
                   style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}
                 >
@@ -236,11 +242,21 @@ const Campaign = () => {
         </div>
       </div>
       <CreateCampaignModal
+        isModalOpen={modals}
+        handleOk={() => {}}
+        handleCancel={() => {
+          SetModal(!modals);
+        }}
+      />
+      <EditCampaignModal
         isModalOpen={editModal}
         handleOk={() => {}}
         handleCancel={() => {
-          setEditModal(!editModal);
+          SetModal(false);
+          setEditModal(false);
+          setSelectedRecord(null);
         }}
+        initialData={selectedRecord}
       />
     </div>
   );
