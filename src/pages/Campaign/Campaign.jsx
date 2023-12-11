@@ -4,12 +4,15 @@ import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
 import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
 import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
 import CreateCampaignModal from "./components/CreateCampaignModal/CreateCampaignModal";
-import { Table, Input, Button, Modal, DatePicker } from "antd";
+import { Table, Input, Button, Modal, DatePicker, message } from "antd";
 import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
 import moment from "moment";
+import "moment-timezone";
+import { useDeleteCampaign } from "../../hooks/campaigns/useDeteleCampaign";
 
 const Campaign = () => {
   const [startDate, setStartDate] = useState(null);
+  const { mutateAsync } = useDeleteCampaign();
 
   const disabledEndDate = (current) => {
     return startDate ? current && current < moment(startDate).endOf("day") : false;
@@ -73,10 +76,11 @@ const Campaign = () => {
       },
       onOk: async () => {
         try {
-          // await mutateAsync({ id: record.accountId });
-          // message.success("Account deleted successfully!");
+          console.log(record.campaignId);
+          await mutateAsync({ id: record.campaignId });
+          message.success(" deleted successfully!");
         } catch (error) {
-          console.error("Error deleting account", error);
+          console.error("Error deleting campaign", error);
         }
       },
       className: "DeleteAccountModal-footer",
@@ -134,14 +138,14 @@ const Campaign = () => {
       dataIndex: "startDate",
       key: "startdate",
       align: "center",
-      render: (_, record) => <div>{moment.utc(record.startDate).format("YYYY-MM-DD HH:mm")}</div>,
+      render: (_, record) => <div>{moment(record.startDate).tz(moment.tz.guess()).format("YYYY-MM-DD HH:mm")}</div>,
     },
     {
       title: "End date",
       dataIndex: "endDate",
       key: "enddate",
       align: "center",
-      render: (_, record) => <div>{moment.utc(record.endDate).format("YYYY-MM-DD HH:mm")}</div>,
+      render: (_, record) => <div>{moment(record.endDate).tz(moment.tz.guess()).format("YYYY-MM-DD HH:mm")}</div>,
     },
     {
       title: "Action",

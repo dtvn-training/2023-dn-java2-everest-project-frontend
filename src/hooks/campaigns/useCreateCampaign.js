@@ -1,28 +1,32 @@
-import { useMutation } from "react-query";
-import axiosClient from "../../api/axiosClient"; // Import your axios instance
+import axiosClient from "../../api/axiosClient";
+import { useMutation, useQueryClient } from "react-query";
+
+const createCampaign = async (formData, token) => {
+  const response = await axiosClient.post("/api/v1/campaigns/createCampaign", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
 
 const useCreateCampaign = () => {
-  // Define the mutation function
-  const createCampaign = async (formData) => {
-    const accessToken = window.localStorage.getItem("accessToken");
-    const response = await axiosClient.post("/api/v1/campaigns/createCampagin", formData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "multipart/form-data",
-      },
-    });
+  const queryClient = useQueryClient();
 
-    return response.data;
+  const mutation = useMutation((formData) => createCampaign(formData, getAuthToken()), {
+    onSuccess: () => {
+      queryClient.invalidateQueries("SEARCH_LIST");
+    },
+  });
+
+  const getAuthToken = () => {
+    // Implement your logic to retrieve the authorization token from localStorage or wherever it's stored
+    return window.localStorage.getItem("accessToken");
   };
 
-  // Create the mutation instance
-  const { mutate, isLoading, isError, error } = useMutation(createCampaign);
-
   return {
-    createCampaign: mutate,
-    isLoading,
-    isError,
-    error,
+    createCampaign: mutation.mutateAsync,
   };
 };
 

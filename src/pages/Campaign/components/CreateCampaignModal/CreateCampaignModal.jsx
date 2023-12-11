@@ -10,6 +10,7 @@ import useCreateCampaign from "../../../../hooks/campaigns/useCreateCampaign";
 
 const { Option } = Select;
 const { Panel } = Collapse;
+
 const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }) => {
   const [form] = useForm();
   const [startDate, setStartDate] = useState(null);
@@ -114,22 +115,31 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
   };
   const [imageUrl, setImageUrl] = useState(null);
   const onFinish = async (values) => {
+    const campaignData = {
+      campaignDTO: {
+        name: values.name,
+        startDate: moment(values.startdate.$d).format("YYYY-MM-DDTHH:mm:ssZ"),
+        endDate: moment(values.enddate.$d).format("YYYY-MM-DDTHH:mm:ssZ"),
+        budget: values.Budget,
+        bidAmount: values.bidamount ? values.bidamount : 0,
+        status: values.userstatus === "ACTIVE" ? true : false,
+      },
+      creativesDTO: {
+        title: values.title,
+        description: values.description,
+        finalUrl: values.final_url,
+      },
+    };
     console.log("Received values:", values);
     try {
       const formData = new FormData();
-
-      // Add your form values to formData
-      formData.append("name", values.name);
-      formData.append("userstatus", values.userstatus);
-      // Add other form fields as needed
 
       // Append image file to formData
       if (values.createpreview && values.createpreview.length > 0) {
         formData.append("file", values.createpreview[0].originFileObj);
       }
-
-      // Add additional fields if needed
-
+      // Add your form values to formData
+      formData.append("data", JSON.stringify(campaignData));
       // Call the createCampaign function from the hook
       await createCampaign(formData);
 
@@ -146,6 +156,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     reader.readAsDataURL(file);
     return false; // Prevent default upload behavior
   };
+
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -380,7 +391,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
             )}
             <Form.Item
               label="Final URL"
-              name="final url"
+              name="final_url"
               className="custom-label-input"
               rules={[
                 {
