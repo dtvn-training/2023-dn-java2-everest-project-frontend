@@ -29,7 +29,7 @@ const Account = () => {
     pagination.pageSize,
     pagination.current - 1
   );
-  const debouncedSetSearchText = debounce((text) => setSearchText(text), 500);
+  const debouncedSetSearchText = debounce((text) => setSearchText(text), 1500);
 
   useEffect(() => {
     if (fetchAccounts) {

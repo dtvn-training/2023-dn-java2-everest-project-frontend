@@ -130,7 +130,7 @@
 }
 
 @media (max-width: 1200px) {
-  .action-buttons {
+  /* .action-buttons {
     display: flex;
     flex-direction: column;
   }
@@ -140,5 +140,18 @@
     width: 100%;
     margin-right: 0;
     margin-bottom: 5px;
-  }
+  } */
+}
+
+.ant-table-tbody td {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.ant-table-cell {
+  overflow: hidden;
+  white-space: nowrap !important;
+  text-overflow: ellipsis;
 }
