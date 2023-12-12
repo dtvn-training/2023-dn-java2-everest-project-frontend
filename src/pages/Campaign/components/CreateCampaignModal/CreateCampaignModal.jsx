@@ -139,7 +139,8 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
         formData.append("file", values.createpreview[0].originFileObj);
       }
       // Add your form values to formData
-      formData.append("data", JSON.stringify(campaignData));
+      formData.append("data", new Blob([JSON.stringify(campaignData)], { type: "application/json" }));
+
       // Call the createCampaign function from the hook
       await createCampaign(formData);
 

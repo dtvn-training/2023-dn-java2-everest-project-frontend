@@ -52,3 +52,26 @@
   display: flex;
   gap: 15px;
 }
+
+.ant-table-tbody td {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.ant-table-cell {
+  overflow: hidden;
+  white-space: nowrap !important;
+  text-overflow: ellipsis;
+}
+
+.ant-table-cell div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.campaign-img {
+  max-width: 50px;
+  max-height: 50px;
+}

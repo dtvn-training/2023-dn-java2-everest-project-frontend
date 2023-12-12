@@ -15,6 +15,7 @@ import EditCampaignModal from "./components/EditCampaignModal/EditCampaignModal"
 const Campaign = () => {
   const [modals, SetModal] = useState(false);
   const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const { mutateAsync } = useDeleteCampaign();
 
   const disabledEndDate = (current) => {
@@ -35,8 +36,45 @@ const Campaign = () => {
     return current && current < endOfDay;
   };
 
-  const handleStartDateChange = (date) => {
-    setStartDate(date);
+  const debouncedSetSearchAndDate = debounce((text, start, end) => {
+    if (start && !end) {
+      setSearchText(null);
+      setStartDate(start);
+      setEndDate(null);
+    } else if (!start && end) {
+      setSearchText(null);
+      setStartDate(null);
+      setEndDate(end);
+    } else if (start && end) {
+      setSearchText(text);
+      setStartDate(start);
+      setEndDate(end);
+    } else {
+      setSearchText(text);
+      setStartDate(null);
+      setEndDate(null);
+    }
+  }, 1500);
+  const handleStartDateChange = (value, date) => {
+    if (date) {
+      const formattedStartTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      setStartDate(formattedStartTimestamp);
+      debouncedSetSearchAndDate(searchText, formattedStartTimestamp, endDate);
+    } else {
+      debouncedSetSearchAndDate(searchText, null, endDate);
+    }
+  };
+
+  const handleEndDateChange = (date) => {
+    if (date) {
+      const formattedEndTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      debouncedSetSearchAndDate(searchText, startDate, formattedEndTimestamp);
+    } else {
+      debouncedSetSearchAndDate(searchText, startDate, null);
+    }
+  };
+  const handleSearchInputChange = (e) => {
+    debouncedSetSearchAndDate(e.target.value, startDate, endDate);
   };
   const [editModal, setEditModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -48,10 +86,11 @@ const Campaign = () => {
   const [searchText, setSearchText] = useState("");
   const { data: fetchCampaigns, isFetching } = useSearchCampaign(
     searchText,
+    startDate,
+    endDate,
     pagination.pageSize,
     pagination.current - 1
   );
-  const debouncedSetSearchText = debounce((text) => setSearchText(text), 1500);
 
   useEffect(() => {
     if (fetchCampaigns) {
@@ -98,7 +137,16 @@ const Campaign = () => {
       dataIndex: "name",
       key: "campaignname",
       align: "center",
+      render: (_, record) => (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10 }}>
+          <div>
+            <img className="campaign-img" src={`${record.imgUrl}`}></img>
+          </div>
+          <div>{`${record.name}`}</div>
+        </div>
+      ),
     },
+
     {
       title: "Status",
       dataIndex: "status",
@@ -183,6 +231,7 @@ const Campaign = () => {
               <div className="date-picker">
                 <div className="date-picker-label">Start Date:</div>
                 <DatePicker
+                  id="start-date-picker"
                   showTime={{ format: "HH:mm" }}
                   format="YYYY-MM-DD HH:mm"
                   placeholder="Select Start Date"
@@ -190,11 +239,13 @@ const Campaign = () => {
                 />
                 <div className="date-picker-label">End Date:</div>
                 <DatePicker
+                  id="end-date-picker"
                   showTime={{ format: "HH:mm" }}
                   format="YYYY-MM-DD HH:mm"
                   placeholder="Select End Date"
                   disabledDate={disabledEndDate}
                   disabledTime={(current, type) => disabledEndDateTime(current, type)}
+                  onChange={handleEndDateChange}
                 />
               </div>
             </div>
@@ -204,7 +255,7 @@ const Campaign = () => {
                 style={{ backgroundColor: "#C4C4C4", color: "#000", width: "14em" }}
                 placeholder="Search..."
                 className="custom-input"
-                onChange={(e) => debouncedSetSearchText(e.target.value)}
+                onChange={handleSearchInputChange}
               />
               <div className="campaign-function-button">
                 <Button type="default" style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}>

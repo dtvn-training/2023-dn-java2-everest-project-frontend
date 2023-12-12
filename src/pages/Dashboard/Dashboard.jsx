@@ -61,6 +61,14 @@ const Dashboard = () => {
       dataIndex: "name",
       key: "campaignname",
       align: "center",
+      render: (_, record) => (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10 }}>
+          <div>
+            <img className="campaign-img" src={`${record.imgUrl}`}></img>
+          </div>
+          <div>{`${record.name}`}</div>
+        </div>
+      ),
     },
     {
       title: "Status",
