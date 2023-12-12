@@ -25,6 +25,7 @@ const Signin = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    localStorage.clear();
     userRef.current.focus();
   }, []);
 
@@ -109,7 +110,7 @@ const Signin = () => {
                 value={formik.values.email}
                 required
               />
-              {formik.touched.email && formik.errors.email ? <p>{formik.errors.email}</p> : null}
+              {formik.touched.email && formik.errors.email ? <p className="error">{formik.errors.email}</p> : null}
             </div>
 
             <div className="form-group">
@@ -121,7 +122,9 @@ const Signin = () => {
                 value={formik.values.password}
                 required
               />
-              {formik.touched.password && formik.errors.password ? <p>{formik.errors.password}</p> : null}
+              {formik.touched.password && formik.errors.password ? (
+                <p className="error">{formik.errors.password}</p>
+              ) : null}
             </div>
 
             <div className="login-butons">
