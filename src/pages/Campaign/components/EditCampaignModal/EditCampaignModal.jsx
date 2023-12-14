@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Upload, Select, Button, Image, Modal, Collapse, DatePicker } from "antd";
-import { useForm } from "antd/lib/form/Form";
-import { useDropzone } from "react-dropzone";
-import Resizer from "react-image-file-resizer";
 import { UploadOutlined } from "@ant-design/icons";
-import "./EditCampaignModal.css";
+import { Button, Collapse, DatePicker, Form, Image, Input, Modal, Select, Upload } from "antd";
+import { useForm } from "antd/lib/form/Form";
+import useCreateCampaign from "hooks/campaigns/useCreateCampaign";
 import moment from "moment";
-import useCreateCampaign from "../../../../hooks/campaigns/useCreateCampaign";
+import { useEffect, useState } from "react";
+import "./EditCampaignModal.css";
 
 const { Option } = Select;
 const { Panel } = Collapse;

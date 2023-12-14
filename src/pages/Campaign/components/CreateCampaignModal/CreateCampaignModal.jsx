@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Upload, Select, Button, Image, Modal, Collapse, DatePicker, message } from "antd";
-import { useForm } from "antd/lib/form/Form";
-import { useDropzone } from "react-dropzone";
-import Resizer from "react-image-file-resizer";
 import { UploadOutlined } from "@ant-design/icons";
-import "./CreateCampaignModal.css";
+import { Button, Collapse, DatePicker, Form, Image, Input, Modal, Select, Upload, message } from "antd";
+import { useForm } from "antd/lib/form/Form";
 import moment from "moment";
-import useCreateCampaign from "../../../../hooks/campaigns/useCreateCampaign";
+import { useState } from "react";
+import useCreateCampaign from "hooks/campaigns/useCreateCampaign";
+import "./CreateCampaignModal.css";
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -152,7 +150,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
       }
       // Handle success if needed
     } catch (error) {
-      // Handle error if needed
+      console.error(error);
     }
   };
   const beforeUpload = (file) => {
