@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Upload, Select, Button, Image, Modal, Collapse, DatePicker } from "antd";
+import { Form, Input, Upload, Select, Button, Image, Modal, Collapse, DatePicker, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useDropzone } from "react-dropzone";
 import Resizer from "react-image-file-resizer";
@@ -67,7 +67,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     if (value.length < minLength || value.length > maxLength) {
       return Promise.reject(`Name must be between ${minLength} and ${maxLength} characters.`);
     }
-    const specialCharactersRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%^&*(){}|~<>;:[\]]{2,}$/;
+    const specialCharactersRegex = /^[\w'\-,.][^!¡?÷?¿/\\+=@#$%^&*(){}|~<>;:[\]]{2,}$/;
     if (!specialCharactersRegex.test(value)) {
       return Promise.reject("Name cannot contain special characters");
     }
@@ -142,8 +142,14 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
       formData.append("data", new Blob([JSON.stringify(campaignData)], { type: "application/json" }));
 
       // Call the createCampaign function from the hook
-      await createCampaign(formData);
-
+      const response = await createCampaign(formData);
+      if (response?.code === 400) {
+        return message.error(response?.message);
+      } else {
+        message.success(response?.message);
+        form.resetFields(); // Reset form fields on success
+        handleCancel(); // Close the modal on success
+      }
       // Handle success if needed
     } catch (error) {
       // Handle error if needed

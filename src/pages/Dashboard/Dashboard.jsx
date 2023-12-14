@@ -10,16 +10,66 @@ import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
 import { Table, Input, Button, Modal, DatePicker } from "antd";
 import { debounce } from "lodash";
 
-const onChange = (value, dateString) => {
-  console.log("Selected Time: ", value);
-  console.log("Formatted Selected Time: ", dateString);
-};
-const onOk = (value) => {
-  console.log("onOk: ", value);
-};
 const Dashboard = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  const disabledEndDateTime = (current, type) => {
+    if (type === "start") {
+      return false;
+    }
+
+    if (!startDate) {
+      return true;
+    }
+
+    const endOfDay = moment(startDate).endOf("day");
+
+    return current && current < endOfDay;
+  };
+
+  const debouncedSetSearchAndDate = debounce((text, start, end) => {
+    if (start && !end) {
+      setSearchText(null);
+      setStartDate(start);
+      setEndDate(null);
+    } else if (!start && end) {
+      setSearchText(null);
+      setStartDate(null);
+      setEndDate(end);
+    } else if (start && end) {
+      setSearchText(text);
+      setStartDate(start);
+      setEndDate(end);
+    } else {
+      setSearchText(text);
+      setStartDate(null);
+      setEndDate(null);
+    }
+  }, 1500);
+  const handleStartDateChange = (value, date) => {
+    if (date) {
+      const formattedStartTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      setStartDate(formattedStartTimestamp);
+      debouncedSetSearchAndDate(searchText, formattedStartTimestamp, endDate);
+    } else {
+      debouncedSetSearchAndDate(searchText, null, endDate);
+    }
+  };
+  const handleEndDateChange = (value, date) => {
+    if (date) {
+      const formattedEndTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      debouncedSetSearchAndDate(searchText, startDate, formattedEndTimestamp);
+    } else {
+      debouncedSetSearchAndDate(searchText, startDate, null);
+    }
+  };
+  const handleSearchInputChange = (e) => {
+    debouncedSetSearchAndDate(e.target.value, startDate, endDate);
+  };
+  const disabledEndDate = (current) => {
+    return startDate ? current && current < moment(startDate).endOf("day") : false;
+  };
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 3,
@@ -28,25 +78,17 @@ const Dashboard = () => {
   const [searchText, setSearchText] = useState("");
   const { data: fetchCampaigns, isFetching } = useSearchCampaign(
     searchText,
+    startDate,
+    endDate,
     pagination.pageSize,
     pagination.current - 1
   );
-  const debouncedSetSearchText = debounce((text) => setSearchText(text), 1500);
-
   useEffect(() => {
     if (fetchCampaigns) {
       setTotal(fetchCampaigns?.data?.totalElements || 0);
     }
   }, [fetchCampaigns]);
-  const handleStartDateChange = (date) => {
-    setStartDate(date);
-    setEndDate(null); // Reset end date when start date changes
-  };
 
-  const disabledEndDate = (current) => {
-    // Disable dates before the selected start date
-    return current && startDate && current < startDate.endOf("day");
-  };
   const handleTableChange = (pagination, filters, sorter) => {
     setPagination({
       ...pagination,
@@ -140,27 +182,30 @@ const Dashboard = () => {
                 style={{ backgroundColor: "#C4C4C4", color: "#000", width: "14em" }}
                 placeholder="Search..."
                 className="custom-input"
-                onChange={(e) => debouncedSetSearchText(e.target.value)}
+                onChange={handleSearchInputChange}
               />
             </div>
             <div className="dashboard-header__function">
               <div className="date-picker-label">Start Date:</div>
               <DatePicker
+                id="start-date-picker"
                 style={{ marginRight: "10px" }}
                 showTime={{ format: "HH:mm" }}
-                value={startDate}
-                onChange={handleStartDateChange}
+                format="YYYY-MM-DD HH:mm"
                 placeholder="Select Start Date"
+                onChange={handleStartDateChange}
               />
 
               <div className="date-picker-label">End Date:</div>
               <DatePicker
+                id="end-date-picker"
                 style={{ marginRight: "10px" }}
                 showTime={{ format: "HH:mm" }}
-                value={endDate}
-                onChange={(date) => setEndDate(date)}
-                disabledDate={disabledEndDate}
+                format="YYYY-MM-DD HH:mm"
                 placeholder="Select End Date"
+                disabledDate={disabledEndDate}
+                disabledTime={(current, type) => disabledEndDateTime(current, type)}
+                onChange={handleEndDateChange}
               />
             </div>
           </div>

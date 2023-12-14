@@ -65,7 +65,7 @@ const Campaign = () => {
     }
   };
 
-  const handleEndDateChange = (date) => {
+  const handleEndDateChange = (value, date) => {
     if (date) {
       const formattedEndTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
       debouncedSetSearchAndDate(searchText, startDate, formattedEndTimestamp);
