@@ -1,13 +1,13 @@
 import axiosClient from "../../api/axiosClient";
 import { useQuery } from "react-query";
 
-export const fetchSearchCampaigns = async ({ name, startdate, endDate, pageSize, pageNo }) => {
+export const fetchSearchCampaigns = async ({ name, startDate, endDate, pageSize, pageNo }) => {
   const accessToken = window.localStorage.getItem("accessToken");
 
   const response = await axiosClient.get("/api/v1/campaigns/getCampaign", {
     params: {
       name,
-      startdate,
+      startDate,
       endDate,
       pageSize,
       pageNo,

@@ -12,6 +12,7 @@ const { Panel } = Collapse;
 const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }) => {
   const [form] = useForm();
   const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const disabledEndDate = (current) => {
     return startDate ? current && current < moment(startDate).endOf("day") : false;
@@ -31,8 +32,19 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     return current && current < endOfDay;
   };
 
-  const handleStartDateChange = (date) => {
-    setStartDate(date);
+  const handleStartDateChange = (value, date) => {
+    if (date) {
+      const formattedStartTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      setStartDate(formattedStartTimestamp);
+      setEndDate(endDate);
+    }
+  };
+  const handleEndDateChange = (value, date) => {
+    if (date) {
+      const formattedEndTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      setStartDate(startDate);
+      setEndDate(formattedEndTimestamp);
+    }
   };
   const { createCampaign, isLoading, isError, error } = useCreateCampaign();
 
@@ -255,6 +267,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
               <div className="date-picker-container">
                 <Form.Item label="Start date" name="startdate">
                   <DatePicker
+                    id="start-date-picker"
                     showTime={{ format: "HH:mm" }}
                     format="YYYY-MM-DD HH:mm"
                     placeholder="Select Start Date"
@@ -263,11 +276,13 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
                 </Form.Item>
                 <Form.Item label="End date" name="enddate">
                   <DatePicker
+                    id="end-date-picker"
                     showTime={{ format: "HH:mm" }}
                     format="YYYY-MM-DD HH:mm"
                     placeholder="Select End Date"
                     disabledDate={disabledEndDate}
                     disabledTime={(current, type) => disabledEndDateTime(current, type)}
+                    onChange={handleEndDateChange}
                   />
                 </Form.Item>
               </div>

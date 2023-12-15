@@ -12,22 +12,12 @@ const { Panel } = Collapse;
 const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData }) => {
   const [form] = useForm();
   const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   useEffect(() => {
+    console.log("init", initialData);
+
     if (initialData) {
-      const { name, userstatus, startdate, enddate, Budget, bidamount } = initialData;
-
-      form.setFieldsValue({
-        name,
-        userstatus,
-        startdate: moment(startdate),
-        enddate: moment(enddate),
-        Budget,
-        bidamount,
-        createpreview: [],
-      });
-
-      setStartDate(moment(startdate));
-      setImageUrl(initialData.creativesDTO?.image || null);
+      form.setFieldsValue(initialData);
     }
   }, [initialData, form]);
   const disabledEndDate = (current) => {
@@ -48,8 +38,19 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
     return current && current < endOfDay;
   };
 
-  const handleStartDateChange = (date) => {
-    setStartDate(date);
+  const handleStartDateChange = (value, date) => {
+    if (date) {
+      const formattedStartTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      setStartDate(formattedStartTimestamp);
+      setEndDate(endDate);
+    }
+  };
+  const handleEndDateChange = (value, date) => {
+    if (date) {
+      const formattedEndTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      setStartDate(startDate);
+      setEndDate(formattedEndTimestamp);
+    }
   };
   const { editCampaign, isLoading, isError, error } = useEditCampaign();
 
@@ -82,7 +83,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
     if (value.length < minLength || value.length > maxLength) {
       return Promise.reject(`Name must be between ${minLength} and ${maxLength} characters.`);
     }
-    const specialCharactersRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%^&*(){}|~<>;:[\]]{2,}$/;
+    const specialCharactersRegex = /^[\w'\-,.][^!¡?÷?¿/\\+=@#$%^&*(){}|~<>;:[\]]{2,}$/;
     if (!specialCharactersRegex.test(value)) {
       return Promise.reject("Name cannot contain special characters");
     }
@@ -133,11 +134,11 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
     const campaignData = {
       campaignDTO: {
         name: values.name,
-        startDate: moment(values.startdate.$d).format("YYYY-MM-DDTHH:mm:ssZ"),
-        endDate: moment(values.enddate.$d).format("YYYY-MM-DDTHH:mm:ssZ"),
-        budget: values.Budget,
+        startDate: moment(values.startDate.$d).format("YYYY-MM-DDTHH:mm:ssZ"),
+        endDate: moment(values.endDate.$d).format("YYYY-MM-DDTHH:mm:ssZ"),
+        budget: values.budget,
         bidAmount: values.bidamount ? values.bidamount : 0,
-        status: values.userstatus === "ACTIVE" ? true : false,
+        status: values.status === "ACTIVE" ? true : false,
       },
       creativesDTO: {
         title: values.title,
@@ -156,7 +157,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
       // Add your form values to formData
       formData.append("data", new Blob([JSON.stringify(campaignData)], { type: "application/json" }));
 
-      const id = "12";
+      const id = initialData.campaignId.toString();
       const token = window.localStorage.getItem("accessToken");
       const response = await editCampaign({ id, formData, token });
       if (response?.code === 400) {
@@ -240,12 +241,12 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
             </Form.Item>
             <Form.Item
               label="User Status"
-              name="userstatus"
+              name="status"
               className="custom-label-input"
               rules={[
                 {
                   required: true,
-                  message: "Please input your role!",
+                  message: "Please choose status!",
                 },
               ]}
             >
@@ -274,6 +275,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
               <div className="date-picker-container">
                 <Form.Item label="Start date" name="startdate">
                   <DatePicker
+                    id="start-date-picker"
                     showTime={{ format: "HH:mm" }}
                     format="YYYY-MM-DD HH:mm"
                     placeholder="Select Start Date"
@@ -282,11 +284,13 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
                 </Form.Item>
                 <Form.Item label="End date" name="enddate">
                   <DatePicker
+                    id="end-date-picker"
                     showTime={{ format: "HH:mm" }}
                     format="YYYY-MM-DD HH:mm"
                     placeholder="Select End Date"
                     disabledDate={disabledEndDate}
                     disabledTime={(current, type) => disabledEndDateTime(current, type)}
+                    onChange={handleEndDateChange}
                   />
                 </Form.Item>
               </div>
@@ -305,7 +309,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
             <Form.Item
               label="Budget"
-              name="Budget"
+              name="budget"
               className="custom-label-input"
               rules={[
                 {
@@ -334,7 +338,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
             <Form.Item
               label="Bid Amount"
-              name="bidamount"
+              name="bidAmount"
               className="custom-label-input"
               rules={[
                 {
@@ -416,7 +420,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
             )}
             <Form.Item
               label="Final URL"
-              name="final_url"
+              name="finalUrl"
               className="custom-label-input"
               rules={[
                 {

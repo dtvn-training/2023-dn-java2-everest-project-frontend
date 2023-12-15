@@ -106,6 +106,8 @@ const Campaign = () => {
   };
   const handleEdit = (record) => {
     setEditModal(true);
+    record.startDate = moment(record.startDate);
+    record.endDate = moment(record.endDate);
     setSelectedRecord(record);
   };
 
