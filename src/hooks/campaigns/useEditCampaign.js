@@ -1,23 +1,19 @@
 import axiosClient from "../../api/axiosClient";
 import { useQueryClient, useMutation } from "react-query";
 
-const dataCampaign = async ({ id, record }) => {
-  const accessToken = window.localStorage.getItem("accessToken");
-
-  const response = await axiosClient.put(`/api/v1/accounts/update?id=${id}`, record, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return response.data;
-};
-
-export const useEditCampaign = () => {
+const useEditCampaign = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    ({ id, record }) => {
-      return dataCampaign({ id, record });
+  const mutation = useMutation(
+    async ({ id, formData, token }) => {
+      const response = await axiosClient.put(`/api/v1/campaigns/updateCampagin?id=${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data;
     },
     {
       onSuccess: () => {
@@ -25,4 +21,10 @@ export const useEditCampaign = () => {
       },
     }
   );
+
+  return {
+    editCampaign: mutation.mutateAsync,
+  };
 };
+
+export default useEditCampaign;

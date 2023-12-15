@@ -139,6 +139,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
       // Add your form values to formData
       formData.append("data", new Blob([JSON.stringify(campaignData)], { type: "application/json" }));
 
+      console.log(formData);
       // Call the createCampaign function from the hook
       const response = await createCampaign(formData);
       if (response?.code === 400) {

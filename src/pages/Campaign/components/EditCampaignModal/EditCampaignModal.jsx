@@ -1,7 +1,7 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Collapse, DatePicker, Form, Image, Input, Modal, Select, Upload } from "antd";
+import { Button, Collapse, DatePicker, Form, Image, Input, Modal, Select, Upload, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import useCreateCampaign from "hooks/campaigns/useCreateCampaign";
+import useEditCampaign from "hooks/campaigns/useEditCampaign";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import "./EditCampaignModal.css";
@@ -51,7 +51,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
   const handleStartDateChange = (date) => {
     setStartDate(date);
   };
-  const { createCampaign, isLoading, isError, error } = useCreateCampaign();
+  const { editCampaign, isLoading, isError, error } = useEditCampaign();
 
   const styledInput = {
     marginLeft: "2.5em",
@@ -154,13 +154,23 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
         formData.append("file", values.createpreview[0].originFileObj);
       }
       // Add your form values to formData
-      formData.append("data", JSON.stringify(campaignData));
-      // Call the createCampaign function from the hook
-      await createCampaign(formData);
+      formData.append("data", new Blob([JSON.stringify(campaignData)], { type: "application/json" }));
+
+      const id = "12";
+      const token = window.localStorage.getItem("accessToken");
+      const response = await editCampaign({ id, formData, token });
+      if (response?.code === 400) {
+        return message.error(response?.message);
+      } else {
+        message.success(response?.message);
+        form.resetFields(); // Reset form fields on success
+        handleCancel(); // Close the modal on success
+      }
 
       // Handle success if needed
     } catch (error) {
       // Handle error if needed
+      console.error(error);
     }
   };
   const beforeUpload = (file) => {
