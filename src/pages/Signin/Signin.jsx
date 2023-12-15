@@ -14,7 +14,6 @@ import { message, Spin } from "antd";
 const LOGIN_URL = "/api/v1/auth/login";
 
 const Signin = () => {
-  // const { setAuth } = useContext(AuthContext);
   const userRef = useRef();
   const errRef = useRef();
   const navigate = useNavigate();

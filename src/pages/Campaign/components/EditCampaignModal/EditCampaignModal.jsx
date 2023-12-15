@@ -150,11 +150,10 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
     try {
       const formData = new FormData();
 
-      // Append image file to formData
       if (values.createpreview && values.createpreview.length > 0) {
         formData.append("file", values.createpreview[0].originFileObj);
       }
-      // Add your form values to formData
+
       formData.append("data", new Blob([JSON.stringify(campaignData)], { type: "application/json" }));
 
       const id = initialData.campaignId.toString();
@@ -164,13 +163,10 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
         return message.error(response?.message);
       } else {
         message.success(response?.message);
-        form.resetFields(); // Reset form fields on success
-        handleCancel(); // Close the modal on success
+        form.resetFields();
+        handleCancel();
       }
-
-      // Handle success if needed
     } catch (error) {
-      // Handle error if needed
       console.error(error);
     }
   };
@@ -180,7 +176,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
       setImageUrl(e.target.result);
     };
     reader.readAsDataURL(file);
-    return false; // Prevent default upload behavior
+    return false;
   };
 
   const normFile = (e) => {

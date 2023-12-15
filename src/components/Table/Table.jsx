@@ -1,4 +1,3 @@
-import React from "react";
 import "./Tabel.css";
 
 const Table = ({ data, columns }) => {

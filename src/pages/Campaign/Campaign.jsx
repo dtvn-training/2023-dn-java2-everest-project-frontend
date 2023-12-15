@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { Button, DatePicker, Input, Modal, Table, message } from "antd";
 import { debounce } from "lodash";
-import "./Campaign.css";
-import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
-import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
-import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
-import CreateCampaignModal from "./components/CreateCampaignModal/CreateCampaignModal";
-import { Table, Input, Button, Modal, DatePicker, message } from "antd";
-import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
 import moment from "moment";
 import "moment-timezone";
+import { useEffect, useState } from "react";
+import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
+import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
+import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
 import { useDeleteCampaign } from "../../hooks/campaigns/useDeteleCampaign";
+import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
+import "./Campaign.css";
+import CreateCampaignModal from "./components/CreateCampaignModal/CreateCampaignModal";
 import EditCampaignModal from "./components/EditCampaignModal/EditCampaignModal";
 
 const Campaign = () => {
@@ -112,7 +112,6 @@ const Campaign = () => {
   };
 
   const handleDelete = async (record) => {
-    // Add your delete logic here
     Modal.confirm({
       title: "Confirmination",
       content: "Please confirm that you want to delete everything.",

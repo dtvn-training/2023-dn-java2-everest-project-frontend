@@ -1,4 +1,3 @@
-import React from "react";
 import "./Dashboardbanner.css";
 
 const Dashboardbanner = () => {

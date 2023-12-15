@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { Button, Input, Modal, Table, message } from "antd";
 import { debounce } from "lodash";
-import "./Account.css";
+import { useEffect, useState } from "react";
 import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
 import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
 import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
-import { Space, Table, Tag, Input, Button, Modal, message } from "antd";
-import CreateAccountModal from "./components/CreateAccountModal/CreateAccountModal";
-import EditAccountModal from "./components/EditAccoutModal/EditAccountModal";
-import { useFetchAccounts } from "../../hooks/accounts/useFetchAccounts";
 import { useDeleteAccount } from "../../hooks/accounts/useDeleteAccount";
 import { useSearchAccounts } from "../../hooks/accounts/useSearchAccounts";
+import "./Account.css";
+import CreateAccountModal from "./components/CreateAccountModal/CreateAccountModal";
+import EditAccountModal from "./components/EditAccoutModal/EditAccountModal";
 
 const Account = () => {
   const [modals, SetModal] = useState(false);
@@ -51,7 +50,6 @@ const Account = () => {
   };
 
   const handleDelete = async (record) => {
-    // Add your delete logic here
     Modal.confirm({
       title: "Confirmination",
       content: "Please confirm that you want to delete everything.",

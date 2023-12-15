@@ -1,5 +1,5 @@
-import axiosClient from "../../api/axiosClient";
 import { useQuery } from "react-query";
+import axiosClient from "../../api/axiosClient";
 
 const fetchRoles = async () => {
   const accessToken = window.localStorage.getItem("accessToken");

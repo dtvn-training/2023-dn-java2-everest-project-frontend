@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { Modal, Form, Input, Button, Select, message, Collapse } from "antd";
+import { Button, Collapse, Form, Input, Modal, Select, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import "./EditAccountModal.css";
-import { useUpdataAccount } from "../../../../hooks/accounts/useUpdataAccount";
-import { nameRegex, addressRegex, phoneRegex } from "../../../../utils/RegularExpression";
+import { useEffect } from "react";
 import { useFetchRoles } from "../../../../hooks/accounts/useFetchRoles";
+import { useUpdataAccount } from "../../../../hooks/accounts/useUpdataAccount";
+import { addressRegex, nameRegex, phoneRegex } from "../../../../utils/RegularExpression";
+import "./EditAccountModal.css";
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -38,7 +38,6 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
         address: values.address,
         phone: values.phone,
       };
-      // Use your mutateAsync function to update the account
       const response = await mutateAsync({
         id: initialData.accountId,
         record: initValue,

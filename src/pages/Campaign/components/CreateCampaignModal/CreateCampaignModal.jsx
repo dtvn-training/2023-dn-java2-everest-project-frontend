@@ -1,9 +1,9 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Collapse, DatePicker, Form, Image, Input, Modal, Select, Upload, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
+import useCreateCampaign from "hooks/campaigns/useCreateCampaign";
 import moment from "moment";
 import { useState } from "react";
-import useCreateCampaign from "hooks/campaigns/useCreateCampaign";
 import "./CreateCampaignModal.css";
 
 const { Option } = Select;
@@ -144,24 +144,22 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     try {
       const formData = new FormData();
 
-      // Append image file to formData
       if (values.createpreview && values.createpreview.length > 0) {
         formData.append("file", values.createpreview[0].originFileObj);
       }
-      // Add your form values to formData
+
       formData.append("data", new Blob([JSON.stringify(campaignData)], { type: "application/json" }));
 
       console.log(formData);
-      // Call the createCampaign function from the hook
+
       const response = await createCampaign(formData);
       if (response?.code === 400) {
         return message.error(response?.message);
       } else {
         message.success(response?.message);
-        form.resetFields(); // Reset form fields on success
-        handleCancel(); // Close the modal on success
+        form.resetFields();
+        handleCancel();
       }
-      // Handle success if needed
     } catch (error) {
       console.error(error);
     }
@@ -172,7 +170,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
       setImageUrl(e.target.result);
     };
     reader.readAsDataURL(file);
-    return false; // Prevent default upload behavior
+    return false;
   };
 
   const normFile = (e) => {

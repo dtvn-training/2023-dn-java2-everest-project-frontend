@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { Modal, Form, Input, Button, Select, message, Collapse } from "antd";
+import { Button, Collapse, Form, Input, Modal, Select, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import "./CreateAccountModal.css";
-import { nameRegex, addressRegex, emailRegex, phoneRegex } from "../../../../utils/RegularExpression";
 import useCreateAccount from "../../../../hooks/accounts/useCreateAccount";
 import { useFetchRoles } from "../../../../hooks/accounts/useFetchRoles";
+import { addressRegex, emailRegex, nameRegex, phoneRegex } from "../../../../utils/RegularExpression";
+import "./CreateAccountModal.css";
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -44,7 +43,6 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
       handleOk();
     } catch (error) {
       console.error("Error creating account", error);
-      // Handle error if needed
     }
   };
 
@@ -203,7 +201,7 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (!value) {
-                      return Promise.resolve(); // No validation if the field is empty
+                      return Promise.resolve();
                     }
                     const minLength = 8;
                     const hasDigit = /\d/.test(value);
@@ -252,7 +250,7 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (!value) {
-                      return Promise.resolve(); // No validation if the field is empty
+                      return Promise.resolve();
                     }
                     const minLength = 8;
                     const hasDigit = /\d/.test(value);

@@ -1,5 +1,5 @@
-import axiosClient from "../../api/axiosClient";
 import { useQuery } from "react-query";
+import axiosClient from "../../api/axiosClient";
 
 export const fetchSearchAccounts = async ({ emailOrName, pageSize, pageNo }) => {
   const accessToken = window.localStorage.getItem("accessToken");

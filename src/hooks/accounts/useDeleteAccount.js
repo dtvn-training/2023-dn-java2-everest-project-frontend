@@ -1,5 +1,5 @@
+import { useMutation, useQueryClient } from "react-query";
 import axiosClient from "../../api/axiosClient";
-import { useQueryClient, useMutation } from "react-query";
 const deleteAccount = async ({ id }) => {
   const accessToken = window.localStorage.getItem("accessToken");
 
@@ -24,7 +24,6 @@ export const useDeleteAccount = () => {
     },
     {
       onSuccess: () => {
-        // Invalidate and refetch
         queryClient.invalidateQueries("SEARCH_LIST");
       },
     }
