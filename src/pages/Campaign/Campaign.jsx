@@ -9,8 +9,8 @@ import moment from "moment";
 import "moment-timezone";
 import { useEffect, useState } from "react";
 import "styles/Campaign/Campaign.css";
-import CreateCampaignModal from "./components/CreateCampaignModal/CreateCampaignModal";
-import EditCampaignModal from "./components/EditCampaignModal/EditCampaignModal";
+import CreateCampaignModal from "./components/CreateCampaignModal";
+import EditCampaignModal from "./components/EditCampaignModal";
 
 const Campaign = () => {
   const [modals, SetModal] = useState(false);
