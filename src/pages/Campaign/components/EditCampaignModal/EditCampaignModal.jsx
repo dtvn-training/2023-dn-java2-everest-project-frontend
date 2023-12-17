@@ -5,6 +5,7 @@ import useEditCampaign from "hooks/campaigns/useEditCampaign";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import "styles/Campaign/EditCampaignModal.css";
+import * as validators from "utils/validation";
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -52,7 +53,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
       setEndDate(formattedEndTimestamp);
     }
   };
-  const { editCampaign, isLoading, isError, error } = useEditCampaign();
+  const { editCampaign } = useEditCampaign();
 
   const styledInput = {
     marginLeft: "2.5em",
@@ -73,62 +74,6 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
     wrapperCol: { span: 16 },
   };
   const styledCollapse = { backgroundColor: "#468FAF", color: "#FFFFFF" };
-  const [isEmptyErrorDisplayed, setEmptyErrorDisplayed] = useState(false);
-  const validateName = (_, value) => {
-    const minLength = 2;
-    const maxLength = 50;
-    if (!value) {
-      return Promise.reject("Please enter your name.");
-    }
-    if (value.length < minLength || value.length > maxLength) {
-      return Promise.reject(`Name must be between ${minLength} and ${maxLength} characters.`);
-    }
-    const specialCharactersRegex = /^[\w'\-,.][^!¡?÷?¿/\\+=@#$%^&*(){}|~<>;:[\]]{2,}$/;
-    if (!specialCharactersRegex.test(value)) {
-      return Promise.reject("Name cannot contain special characters");
-    }
-    return Promise.resolve();
-  };
-  const validateTitle = (_, value) => {
-    const minLength = 2;
-    const maxLength = 50;
-    if (!value) {
-      return Promise.reject("Please enter your title.");
-    }
-    if (value.length < minLength || value.length > maxLength) {
-      return Promise.reject(`Title must be between ${minLength} and ${maxLength} characters.`);
-    }
-    return Promise.resolve();
-  };
-  const validateNumber = (_, value, msgReject, msgResolve, type) => {
-    const minValue = 0;
-    const maxValue = 10000000000;
-    if (!value) {
-      setEmptyErrorDisplayed(true);
-      return Promise.reject(msgReject);
-    }
-    if (isNaN(value)) {
-      setEmptyErrorDisplayed(false);
-      return Promise.reject(msgResolve);
-    }
-    if (value < minValue) {
-      return Promise.reject(`${type} must be a positive number`);
-    }
-    if (value > maxValue) {
-      return Promise.reject(`${type} is too large`);
-    }
-    setEmptyErrorDisplayed(false);
-    return Promise.resolve();
-  };
-  const validateBidAmount = (_, value) => {
-    const budgetFieldValue = form.getFieldValue("Budget");
-
-    if (value && budgetFieldValue && parseFloat(value) > parseFloat(budgetFieldValue)) {
-      return Promise.reject("Bid Amount must be less than or equal to Budget.");
-    }
-
-    return Promise.resolve();
-  };
   const [imageUrl, setImageUrl] = useState(null);
   const onFinish = async (values) => {
     const campaignData = {
@@ -228,7 +173,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
                 },
 
                 {
-                  validator: validateName,
+                  validator: (_, value) => validators.validateName(value),
                 },
               ]}
               hasFeedback
@@ -313,7 +258,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
                 },
                 {
                   validator: (_, value) =>
-                    validateNumber(_, value, "Please input your Budget!", "Budget must be a number!", "Budget"),
+                    validators.validateNumber(value, "Please input your Budget!", "Budget must be a number!", "Budget"),
                 },
               ]}
               hasFeedback
@@ -341,7 +286,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
                   required: false,
                 },
                 {
-                  validator: (_, value) => validateBidAmount(_, value),
+                  validator: (_, value) => validators.validateBidAmount(value, form.getFieldValue("budget")),
                 },
               ]}
               hasFeedback
@@ -369,7 +314,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
                   required: false,
                 },
                 {
-                  validator: validateTitle,
+                  validator: (_, value) => validators.validateTitle(value),
                 },
               ]}
               hasFeedback

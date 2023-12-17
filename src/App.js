@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import "./App.css";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import Signin from "./pages/Signin/Signin";
+import Dashboard from "pages/Dashboard/Dashboard";
+import Signin from "pages/Signin/Signin";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
-import NotFound from "./pages/NotFound/NotFound";
-import Account from "./pages/Account/Account";
-import Campaign from "./pages/Campaign/Campaign";
+import NotFound from "pages/NotFound/NotFound";
+import Account from "pages/Account/Account";
+import Campaign from "pages/Campaign/Campaign";
 import { Modal } from "antd";
 
 function App() {

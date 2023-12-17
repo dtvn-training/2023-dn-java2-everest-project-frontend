@@ -1,13 +1,13 @@
 import { Button, DatePicker, Input, Modal, Table, message } from "antd";
+import Dashboardbanner from "components/Dashboard/banner/Dashboardbanner";
+import Dashboardleft from "components/Dashboard/dashboard_left/dashboardleft";
+import Dashboardheader from "components/Dashboard/header/Dashboardheader";
+import { useDeleteCampaign } from "hooks/campaigns/useDeteleCampaign";
+import { useSearchCampaign } from "hooks/campaigns/useSearchCampaign";
 import { debounce } from "lodash";
 import moment from "moment";
 import "moment-timezone";
 import { useEffect, useState } from "react";
-import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
-import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
-import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
-import { useDeleteCampaign } from "../../hooks/campaigns/useDeteleCampaign";
-import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
 import "styles/Campaign/Campaign.css";
 import CreateCampaignModal from "./components/CreateCampaignModal/CreateCampaignModal";
 import EditCampaignModal from "./components/EditCampaignModal/EditCampaignModal";
@@ -141,7 +141,7 @@ const Campaign = () => {
       render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10 }}>
           <div>
-            <img className="campaign-img" src={`${record.imgUrl}`}></img>
+            <img className="campaign-img" alt="an img of campaign" src={`${record.imgUrl}`}></img>
           </div>
           <div>{`${record.name}`}</div>
         </div>

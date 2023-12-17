@@ -30,7 +30,7 @@
   width: 100%;
 }
 
-.date-picker-container > div {
+.date-picker-container>div {
   width: 50%;
   box-sizing: border-box;
   margin: 0;

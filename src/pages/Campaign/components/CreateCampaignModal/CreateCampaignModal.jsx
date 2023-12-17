@@ -47,7 +47,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
       setEndDate(formattedEndTimestamp);
     }
   };
-  const { createCampaign, isLoading, isError, error } = useCreateCampaign();
+  const { createCampaign } = useCreateCampaign();
 
   const styledInput = {
     marginLeft: "2.5em",
@@ -68,7 +68,6 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     wrapperCol: { span: 16 },
   };
   const styledCollapse = { backgroundColor: "#468FAF", color: "#FFFFFF" };
-  const [isEmptyErrorDisplayed, setEmptyErrorDisplayed] = useState(false);
 
   const [imageUrl, setImageUrl] = useState(null);
   const onFinish = async (values) => {

@@ -15,26 +15,5 @@
   "trailingComma": "es5",
   "useTabs": false,
   "vueIndentScriptAndStyle": false,
-  "singleQuote": false,
-  "importOrder": [
-    "<THIRD_PARTY_MODULES>",
-    "interface",
-    "(?=content|api)",
-    "api/",
-    "components/",
-    "context/",
-    "hooks/",
-    "pages",
-    "styles",
-    "mock/",
-    "config",
-    "utils/",
-    "hooks/",
-    "pages/",
-    "(components/|./index)",
-    ".svg",
-    "^../(.*)$",
-    "(?=./styles.module.scss)"
-  ],
-  "importOrderSeparation": true
+  "singleQuote": false
 }

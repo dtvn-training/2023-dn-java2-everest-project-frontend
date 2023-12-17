@@ -1,15 +1,10 @@
-import React from "react";
-import { useRef, useState, useEffect, useContext } from "react";
+import { Spin, message } from "antd";
+import axios from "api/axiosClient";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import "./Signin.css";
-import InputField from "../../components/InputField/InputField";
-import Button from "../../components/Button/Button";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../../api/axiosClient";
-import Dashboard from "../Dashboard/Dashboard";
-import Account from "../Account/Account";
-import { message, Spin } from "antd";
+import * as Yup from "yup";
+import "styles/Signin/Signin.css";
 
 const LOGIN_URL = "/api/v1/auth/login";
 
@@ -31,16 +26,6 @@ const Signin = () => {
   useEffect(() => {
     setErrMsg("");
   }, [email, password]);
-
-  function getLocalAccessToken() {
-    const accessToken = window.localStorage.getItem("accessToken");
-    return accessToken;
-  }
-
-  function getLocalRefreshToken() {
-    const refreshToken = window.localStorage.getItem("refreshToken");
-    return refreshToken;
-  }
 
   const handleSubmit = async (values) => {
     setLoading(true);
