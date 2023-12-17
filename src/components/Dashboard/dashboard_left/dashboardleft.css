@@ -98,7 +98,7 @@ i {
   display: none;
 }
 
-.dashboard_left.slide-out .toggle-button > i {
+.dashboard_left.slide-out .toggle-button>i {
   font-size: 20px;
   text-align: center;
   margin: 0 auto;
@@ -118,6 +118,9 @@ i {
   color: #fff;
   display: flex;
   flex-direction: row;
+  background-color: #468FAF;
+  border: none;
+  margin: 10px auto;
 }
 
 .toggle-button__name {
