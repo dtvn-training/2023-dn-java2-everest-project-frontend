@@ -1,5 +1,5 @@
+import axiosClient from "api/axiosClient";
 import { useMutation, useQueryClient } from "react-query";
-import axiosClient from "../../api/axiosClient";
 const deleteCampagign = async ({ id }) => {
   const accessToken = window.localStorage.getItem("accessToken");
 

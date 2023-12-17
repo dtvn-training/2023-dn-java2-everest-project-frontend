@@ -4,7 +4,7 @@ import { useForm } from "antd/lib/form/Form";
 import useEditCampaign from "hooks/campaigns/useEditCampaign";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import "./EditCampaignModal.css";
+import "styles/Campaign/EditCampaignModal.css";
 
 const { Option } = Select;
 const { Panel } = Collapse;

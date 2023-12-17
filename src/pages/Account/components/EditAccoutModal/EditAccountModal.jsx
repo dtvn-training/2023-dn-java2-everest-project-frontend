@@ -1,10 +1,10 @@
 import { Button, Collapse, Form, Input, Modal, Select, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useEffect } from "react";
-import { useFetchRoles } from "../../../../hooks/accounts/useFetchRoles";
-import { useUpdataAccount } from "../../../../hooks/accounts/useUpdataAccount";
-import { addressRegex, nameRegex, phoneRegex } from "../../../../utils/RegularExpression";
-import "./EditAccountModal.css";
+import { useFetchRoles } from "hooks/accounts/useFetchRoles";
+import { useUpdataAccount } from "hooks/accounts/useUpdataAccount";
+import { addressRegex, nameRegex, phoneRegex } from "utils/RegularExpression";
+import "styles/Account/EditAccountModal.css";
 
 const { Option } = Select;
 const { Panel } = Collapse;

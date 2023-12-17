@@ -1,5 +1,5 @@
+import axiosClient from "api/axiosClient";
 import { useMutation, useQueryClient } from "react-query";
-import axiosClient from "../../api/axiosClient";
 
 const dataAccounts = async ({ id, record }) => {
   const accessToken = window.localStorage.getItem("accessToken");

@@ -1,9 +1,9 @@
 import { Button, Collapse, Form, Input, Modal, Select, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import useCreateAccount from "../../../../hooks/accounts/useCreateAccount";
-import { useFetchRoles } from "../../../../hooks/accounts/useFetchRoles";
-import { addressRegex, emailRegex, nameRegex, phoneRegex } from "../../../../utils/RegularExpression";
-import "./CreateAccountModal.css";
+import useCreateAccount from "hooks/accounts/useCreateAccount";
+import { useFetchRoles } from "hooks/accounts/useFetchRoles";
+import { addressRegex, emailRegex, nameRegex, phoneRegex } from "utils/RegularExpression";
+import "styles/Account/CreateAccountModal.css";
 
 const { Option } = Select;
 const { Panel } = Collapse;

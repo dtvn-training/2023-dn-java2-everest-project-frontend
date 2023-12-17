@@ -8,7 +8,7 @@ import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardle
 import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
 import { useDeleteCampaign } from "../../hooks/campaigns/useDeteleCampaign";
 import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
-import "./Campaign.css";
+import "styles/Campaign/Campaign.css";
 import CreateCampaignModal from "./components/CreateCampaignModal/CreateCampaignModal";
 import EditCampaignModal from "./components/EditCampaignModal/EditCampaignModal";
 

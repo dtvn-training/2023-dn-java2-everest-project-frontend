@@ -15,7 +15,9 @@
   text-decoration: none;
   border-bottom: 2px solid #dbdbdb;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .left-item__user-info {
@@ -27,18 +29,17 @@
 }
 
 .left-item__user-info .info-name {
-  margin: 10px
+  margin: 10px;
 }
 
 .left-item.active {
-  background-color: #FFFFE0;
+  background-color: #ffffe0;
 }
 
 .left-item.active .info-name,
 .left-item.active i {
   color: #006400;
 }
-
 
 .info-img {
   width: 100px;
@@ -97,7 +98,7 @@ i {
   display: none;
 }
 
-.dashboard_left.slide-out .toggle-button>i {
+.dashboard_left.slide-out .toggle-button > i {
   font-size: 20px;
   text-align: center;
   margin: 0 auto;
@@ -122,7 +123,6 @@ i {
 .toggle-button__name {
   margin: 0;
 }
-
 
 .toggle-button i {
   margin-right: 10px;

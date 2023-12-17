@@ -1,12 +1,12 @@
 import { Button, Input, Modal, Table, message } from "antd";
 import { debounce } from "lodash";
 import { useEffect, useState } from "react";
-import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
-import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
-import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
-import { useDeleteAccount } from "../../hooks/accounts/useDeleteAccount";
-import { useSearchAccounts } from "../../hooks/accounts/useSearchAccounts";
-import "./Account.css";
+import Dashboardbanner from "components/Dashboard/banner/Dashboardbanner";
+import Dashboardleft from "components/Dashboard/dashboard_left/dashboardleft";
+import Dashboardheader from "components/Dashboard/header/Dashboardheader";
+import { useDeleteAccount } from "hooks/accounts/useDeleteAccount";
+import { useSearchAccounts } from "hooks/accounts/useSearchAccounts";
+import "styles/Account/Account.css";
 import CreateAccountModal from "./components/CreateAccountModal/CreateAccountModal";
 import EditAccountModal from "./components/EditAccoutModal/EditAccountModal";
 

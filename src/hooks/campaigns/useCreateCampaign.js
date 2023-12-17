@@ -1,5 +1,5 @@
+import axiosClient from "api/axiosClient";
 import { useMutation, useQueryClient } from "react-query";
-import axiosClient from "../../api/axiosClient";
 
 const createCampaign = async (formData, token) => {
   const response = await axiosClient.post("/api/v1/campaigns/createCampagin", formData, {

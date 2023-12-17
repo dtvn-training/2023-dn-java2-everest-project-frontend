@@ -32,7 +32,7 @@
   gap: 10px;
 }
 
-.account-header__function>button {
+.account-header__function > button {
   display: block;
 }
 
@@ -122,11 +122,11 @@
 }
 
 .edit-button {
-  background-color: #48BB6A;
+  background-color: #48bb6a;
 }
 
 .delete-button {
-  background-color: #F7685B;
+  background-color: #f7685b;
 }
 
 @media (max-width: 1200px) {

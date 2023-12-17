@@ -1,5 +1,5 @@
+import axiosClient from "api/axiosClient";
 import { useMutation, useQueryClient } from "react-query";
-import axiosClient from "../../api/axiosClient";
 
 const createAccount = async (data, token) => {
   const response = await axiosClient.post("/api/v1/accounts/registerAccount", data, {

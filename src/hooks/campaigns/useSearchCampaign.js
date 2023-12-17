@@ -1,4 +1,4 @@
-import axiosClient from "../../api/axiosClient";
+import axiosClient from "api/axiosClient";
 import { useQuery } from "react-query";
 
 export const fetchSearchCampaigns = async ({ name, startDate, endDate, pageSize, pageNo }) => {

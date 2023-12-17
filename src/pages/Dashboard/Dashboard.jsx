@@ -2,11 +2,12 @@ import { DatePicker, Input, Table } from "antd";
 import { debounce } from "lodash";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import Dashboardbanner from "../../components/Dashboard/banner/Dashboardbanner";
-import Dashboardleft from "../../components/Dashboard/dashboard_left/dashboardleft";
-import Dashboardheader from "../../components/Dashboard/header/Dashboardheader";
-import { useSearchCampaign } from "../../hooks/campaigns/useSearchCampaign";
-import "./Dashboard.css";
+
+import Dashboardbanner from "components/Dashboard/banner/Dashboardbanner";
+import Dashboardleft from "components/Dashboard/dashboard_left/dashboardleft";
+import Dashboardheader from "components/Dashboard/header/Dashboardheader";
+import { useSearchCampaign } from "hooks/campaigns/useSearchCampaign";
+import "styles/Dashboard/Dashboard.css";
 
 const Dashboard = () => {
   const [startDate, setStartDate] = useState(null);
