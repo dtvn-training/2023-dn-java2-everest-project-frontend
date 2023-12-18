@@ -1,9 +1,11 @@
+import * as errorMessage from "constants/ErrorMessages";
+
 export const validateName = (value) => {
   const minLength = 2;
   const maxLength = 50;
 
   if (!value) {
-    return Promise.reject("Please enter your name.");
+    return Promise.reject(errorMessage.ERROR_CAMPAIGN_NAME_REQUIRED);
   }
 
   if (value.length < minLength || value.length > maxLength) {
@@ -13,7 +15,7 @@ export const validateName = (value) => {
   const specialCharactersRegex = /^[\w'\-,.][^!¡?÷?¿/\\+=@#$%^&*(){}|~<>;:[\]]{2,}$/;
 
   if (!specialCharactersRegex.test(value)) {
-    return Promise.reject("Name cannot contain special characters");
+    return Promise.reject(errorMessage.ERROR_CAMPAIGN_NAME_CANNOT_CONTAIN_SPECIAL_CHARACTERS);
   }
 
   return Promise.resolve();
@@ -23,7 +25,7 @@ export const validateTitle = (value) => {
   const minLength = 2;
   const maxLength = 50;
   if (!value) {
-    return Promise.reject("Please enter your title.");
+    return Promise.reject(errorMessage.ERROR_CAMPAIGN_TITLE_REQUIRED);
   }
   if (value.length < minLength || value.length > maxLength) {
     return Promise.reject(`Title must be between ${minLength} and ${maxLength} characters.`);
@@ -56,7 +58,7 @@ export const validateNumber = (value, msgReject, msgResolve, type) => {
 
 export const validateBidAmount = (value, budgetFieldValue) => {
   if (value && budgetFieldValue && parseFloat(value) > parseFloat(budgetFieldValue)) {
-    return Promise.reject("Bid Amount must be less than or equal to Budget.");
+    return Promise.reject(errorMessage.ERROR_CAMPAIGN_BID_AMOUNT_RANGE);
   }
 
   return Promise.resolve();

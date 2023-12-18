@@ -9,6 +9,7 @@ import DatePickerSection from "./Sections/DatePickerSection";
 import FileUploadSection from "./Sections/FileUploadSection";
 import FormSection from "./Sections/FormSection";
 import StatusSelect from "./Sections/StatusSelect";
+import * as appConstant from "constants/AppConstants";
 
 const { Panel } = Collapse;
 
@@ -39,7 +40,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     wrapperCol: { span: 16 },
   };
 
-  const styledCollapse = { backgroundColor: "#468FAF", color: "#FFFFFF" };
+  const styledCollapse = { backgroundColor: appConstant.MAIN_COLOR, color: "#FFFFFF" };
 
   const onFinish = async (values) => {
     const campaignData = {

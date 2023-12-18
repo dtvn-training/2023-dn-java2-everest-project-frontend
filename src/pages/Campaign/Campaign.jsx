@@ -1,12 +1,16 @@
 import { Button, DatePicker, Input, Modal, Table, message } from "antd";
 import Banner from "components/Dashboard/Banner/Banner";
-import Sidebar from "components/Dashboard/Sidebar/Sidebar";
 import Header from "components/Dashboard/Header/Header";
+import Sidebar from "components/Dashboard/Sidebar/Sidebar";
+import * as appConstants from "constants/AppConstants";
+import * as commonMessages from "constants/CommonMessages";
+import * as errorMessages from "constants/ErrorMessages";
 import { useDeleteCampaign } from "hooks/campaigns/useDeteleCampaign";
 import { useSearchCampaign } from "hooks/campaigns/useSearchCampaign";
 import { debounce } from "lodash";
 import moment from "moment";
 import "moment-timezone";
+import { campaignColumns } from "pages/TableColumn/CampaignColumns";
 import { useEffect, useState } from "react";
 import "styles/Campaign/Campaign.css";
 import CreateCampaignModal from "./components/CreateCampaignModal";
@@ -77,7 +81,7 @@ const Campaign = () => {
   }, 1500);
   const handleStartDateChange = (value, date) => {
     if (date) {
-      const formattedStartTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      const formattedStartTimestamp = moment(date).format(appConstants.DATE_FORMAT).toString();
       setStartDate(formattedStartTimestamp);
       debouncedSetSearchAndDate(searchText, formattedStartTimestamp, endDate);
     } else {
@@ -87,7 +91,7 @@ const Campaign = () => {
 
   const handleEndDateChange = (value, date) => {
     if (date) {
-      const formattedEndTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      const formattedEndTimestamp = moment(date).format(appConstants.DATE_FORMAT).toString();
       debouncedSetSearchAndDate(searchText, startDate, formattedEndTimestamp);
     } else {
       debouncedSetSearchAndDate(searchText, startDate, null);
@@ -113,9 +117,9 @@ const Campaign = () => {
 
   const handleDelete = async (record) => {
     Modal.confirm({
-      title: "Confirmination",
-      content: "Please confirm that you want to delete everything.",
-      okText: "Delete",
+      title: appConstants.MODAL_CONFIRM_TITLE,
+      content: commonMessages.MESSAGE_CONFIRM_DELETE,
+      okText: appConstants.MODAL_OK_TEXT,
       okButtonProps: {
         style: { backgroundColor: "#F7685B", color: "white" },
       },
@@ -123,86 +127,18 @@ const Campaign = () => {
         try {
           console.log(record.campaignId);
           await mutateAsync({ id: record.campaignId });
-          message.success("Campaign Deleted Successfully");
+          message.success(commonMessages.MESSAGE_CAMPAIGN_DELETED_SUCCESSFULLY);
         } catch (error) {
-          console.error("Error deleting campaign", error);
+          console.error(errorMessages.ERROR_DELETE_CAMPAIGN_FAILED, error);
         }
       },
       className: "DeleteAccountModal-footer",
     });
   };
 
-  const columns = [
+  const actionColumn = [
     {
-      title: "Campaign Name",
-      dataIndex: "name",
-      key: "campaignname",
-      align: "center",
-      render: (_, record) => (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10 }}>
-          <div>
-            <img className="campaign-img" alt="an img of campaign" src={`${record.imgUrl}`}></img>
-          </div>
-          <div>{`${record.name}`}</div>
-        </div>
-      ),
-    },
-
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
-      render: (_, record) => (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div
-            style={{
-              width: "10px",
-              height: "10px",
-              borderRadius: "50%",
-              border: `2px solid ${record.status ? "green" : "red"}`,
-              backgroundColor: "transparent",
-            }}
-          />
-        </div>
-      ),
-    },
-    {
-      title: "Used Amount",
-      dataIndex: "usedAmount",
-      key: "usedamount",
-      align: "center",
-      render: (_, record) => <div>{`¥ ${record.usedAmount}`}</div>,
-    },
-    {
-      title: "Usage Rate",
-      dataIndex: "usageRate",
-      key: "usagerate",
-      align: "center",
-      render: (_, record) => <div>{` ${record.usageRate}%`}</div>,
-    },
-    {
-      title: "budget",
-      dataIndex: "budget",
-      key: "budget",
-      align: "center",
-    },
-    {
-      title: "Start Date",
-      dataIndex: "startDate",
-      key: "startdate",
-      align: "center",
-      render: (_, record) => <div>{moment(record.startDate).tz(moment.tz.guess()).format("YYYY-MM-DD HH:mm")}</div>,
-    },
-    {
-      title: "End date",
-      dataIndex: "endDate",
-      key: "enddate",
-      align: "center",
-      render: (_, record) => <div>{moment(record.endDate).tz(moment.tz.guess()).format("YYYY-MM-DD HH:mm")}</div>,
-    },
-    {
-      title: "Action",
+      title: appConstants.TABLE_CAMPAIGN_ACTION,
       dataIndex: "action",
       key: "action",
       align: "center",
@@ -210,16 +146,17 @@ const Campaign = () => {
       render: (_, record) => (
         <div>
           <Button type="default" onClick={() => handleEdit(record)} className="edit-button">
-            Edit
+            {appConstants.BUTTON_EDIT_TEXT}
           </Button>{" "}
           <Button type="default" onClick={() => handleDelete(record)} className="delete-button">
-            Delete
+            {appConstants.BUTTON_DELETE_TEXT}
           </Button>
         </div>
       ),
     },
   ];
-
+  const columns = [...campaignColumns, ...actionColumn];
+  console.log(columns);
   return (
     <div className="container">
       <Banner />
@@ -230,20 +167,20 @@ const Campaign = () => {
           <div className="campaign-header">
             <div>
               <div className="date-picker">
-                <div className="date-picker-label">Start Date:</div>
+                <div className="date-picker-label">{appConstants.LABEL_START_DATE}</div>
                 <DatePicker
                   id="start-date-picker"
                   showTime={{ format: "HH:mm" }}
-                  format="YYYY-MM-DD HH:mm"
-                  placeholder="Select Start Date"
+                  format={appConstants.DATE_PICKER_FORMAT}
+                  placeholder={appConstants.DATE_PICKER_STARTDATE_PLACEHOLDER}
                   onChange={handleStartDateChange}
                 />
-                <div className="date-picker-label">End Date:</div>
+                <div className="date-picker-label">{appConstants.LABEL_END_DATE}</div>
                 <DatePicker
                   id="end-date-picker"
                   showTime={{ format: "HH:mm" }}
-                  format="YYYY-MM-DD HH:mm"
-                  placeholder="Select End Date"
+                  format={appConstants.DATE_PICKER_FORMAT}
+                  placeholder={appConstants.DATE_PICKER_ENDDATE_PLACEHOLDER}
                   disabledDate={disabledEndDate}
                   disabledTime={(current, type) => disabledEndDateTime(current, type)}
                   onChange={handleEndDateChange}
@@ -254,20 +191,23 @@ const Campaign = () => {
               <Input
                 type="text"
                 style={{ backgroundColor: "#C4C4C4", color: "#000", width: "14em" }}
-                placeholder="Search..."
+                placeholder={appConstants.INPUT_SEARCH_PLACEHOLDER}
                 className="custom-input"
                 onChange={handleSearchInputChange}
               />
               <div className="campaign-function-button">
-                <Button type="default" style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}>
-                  Export CSV
+                <Button
+                  type="default"
+                  style={{ backgroundColor: appConstants.MAIN_COLOR, color: "#fff", width: "150px" }}
+                >
+                  {appConstants.BUTTON_EXPORT_CSV_TEXT}
                 </Button>
                 <Button
                   onClick={() => SetModal(true)}
                   type="default"
-                  style={{ backgroundColor: "#468FAF", color: "#fff", width: "150px" }}
+                  style={{ backgroundColor: appConstants.MAIN_COLOR, color: "#fff", width: "150px" }}
                 >
-                  Create Campaign
+                  {appConstants.BUTTON_CREATE_CAMPAIGN_TEXT}
                 </Button>
               </div>
             </div>
