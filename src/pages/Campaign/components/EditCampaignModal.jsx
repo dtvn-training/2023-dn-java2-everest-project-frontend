@@ -22,8 +22,6 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
   const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
-    console.log("init", initialData);
-
     if (initialData) {
       form.setFieldsValue(initialData);
     }
@@ -67,7 +65,6 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
         finalUrl: values.final_url,
       },
     };
-    console.log("Received values:", values);
     try {
       const formData = new FormData();
 

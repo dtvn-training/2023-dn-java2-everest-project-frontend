@@ -59,7 +59,6 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
         finalUrl: values.final_url,
       },
     };
-    console.log("Received values:", values);
     try {
       const formData = new FormData();
 
@@ -68,8 +67,6 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
       }
 
       formData.append("data", new Blob([JSON.stringify(campaignData)], { type: "application/json" }));
-
-      console.log(formData);
 
       const response = await createCampaign(formData);
       if (response?.code === 400) {

@@ -29,16 +29,13 @@ const Signin = () => {
 
   const handleSubmit = async (values) => {
     setLoading(true);
-    console.log(values);
     try {
       const response = await axios.post(LOGIN_URL, values, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-      console.log(response);
       if (response.data.code === 200) {
         setEmail("");
-        console.log("accesstoken: " + response?.data?.access_token);
         localStorage.setItem("accessToken", response?.data?.access_token);
         localStorage.setItem("refreshToken", response?.data?.refresh_token);
         localStorage.setItem("access_token_expires", response?.data?.access_token_expires_in);

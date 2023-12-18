@@ -125,7 +125,6 @@ const Campaign = () => {
       },
       onOk: async () => {
         try {
-          console.log(record.campaignId);
           await mutateAsync({ id: record.campaignId });
           message.success(commonMessages.MESSAGE_CAMPAIGN_DELETED_SUCCESSFULLY);
         } catch (error) {
@@ -156,7 +155,6 @@ const Campaign = () => {
     },
   ];
   const columns = [...campaignColumns, ...actionColumn];
-  console.log(columns);
   return (
     <div className="container">
       <Banner />

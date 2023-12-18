@@ -23,7 +23,6 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
   };
   const onFinish = async (values) => {
     try {
-      console.log(values);
       const requestData = {
         email: values.email,
         password: values.password,
@@ -34,7 +33,6 @@ const CreateAccountModal = ({ isModalOpen, handleOk, handleCancel }) => {
         phone: values.phone,
       };
       const response = await createAccount(requestData);
-      console.log("request", requestData);
       if (response?.code === 400) {
         return message.error(response?.message);
       }

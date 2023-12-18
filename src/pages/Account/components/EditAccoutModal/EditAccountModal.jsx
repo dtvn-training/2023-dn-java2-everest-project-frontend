@@ -18,7 +18,6 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
       form.setFieldsValue(initialData);
     }
   }, [initialData, form]);
-  console.log("2", initialData);
   const formItemLayout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 16 },
@@ -28,7 +27,6 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
   };
   const onFinish = async (values) => {
     try {
-      console.log(values);
       const initValue = {
         email: values.email,
         password: values.password,
@@ -45,7 +43,6 @@ const EditAccountModal = ({ isModalOpen, handleOk, handleCancel, initialData }) 
       if (response?.code === 400) {
         return message.error(response?.message);
       }
-      console.log("Data refetched successfully!");
       form.resetFields();
       message.success(response?.message);
       handleCancel();
