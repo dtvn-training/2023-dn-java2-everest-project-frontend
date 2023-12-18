@@ -250,7 +250,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
               name="bidamount"
               rules={[
                 {
-                  validator: (_, value) => validators.validateBidAmount(value, form.getFieldValue("budget")),
+                  validator: (_, value) => validators.validateBidAmount(value, form.getFieldValue("Budget")),
                 },
               ]}
             >

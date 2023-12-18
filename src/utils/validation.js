@@ -34,6 +34,7 @@ export const validateTitle = (value) => {
 };
 
 export const validateNumber = (value, msgReject, msgResolve, type) => {
+  console.log("bat dau ham validate");
   const minValue = 0;
   const maxValue = 10000000000;
 
