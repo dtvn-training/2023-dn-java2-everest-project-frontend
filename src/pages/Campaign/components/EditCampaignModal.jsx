@@ -167,7 +167,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
         <Panel header={<div style={styledCollapse}>{appConstant.PANEL_HEADER_DETAILS}</div>} key="1">
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
             <FormSection
-              label="Name"
+              label={appConstant.LABEL_CAMPAIGN_MODAL_NAME}
               name="name"
               rules={[{ required: false }, { validator: (_, value) => validators.validateName(value) }]}
             >
@@ -292,7 +292,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
             <FileUploadSection
               label={appConstant.LABEL_CAMPAIGN_MODAL_CREATIVE_PREVIEW}
               name="createpreview"
-              rules={[{ required: true, message: "Please submit your image" }]}
+              rules={[{ required: true, message: errorMessage.ERROR_CAMPAIGN_IMAGE_REQUIRED }]}
               beforeUpload={beforeUpload}
               styledInput={styledInput}
             >

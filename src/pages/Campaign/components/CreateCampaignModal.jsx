@@ -1,5 +1,7 @@
 import { Button, Collapse, Form, Image, Input, Modal, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
+import * as appConstant from "constants/AppConstants";
+import * as errorMessage from "constants/ErrorMessages";
 import useCreateCampaign from "hooks/campaigns/useCreateCampaign";
 import moment from "moment";
 import { useState } from "react";
@@ -9,7 +11,6 @@ import DatePickerSection from "./Sections/DatePickerSection";
 import FileUploadSection from "./Sections/FileUploadSection";
 import FormSection from "./Sections/FormSection";
 import StatusSelect from "./Sections/StatusSelect";
-import * as appConstant from "constants/AppConstants";
 
 const { Panel } = Collapse;
 
@@ -46,8 +47,8 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     const campaignData = {
       campaignDTO: {
         name: values.name,
-        startDate: moment(values.startdate.$d).format("YYYY-MM-DDTHH:mm:ssZ"),
-        endDate: moment(values.enddate.$d).format("YYYY-MM-DDTHH:mm:ssZ"),
+        startDate: moment(values.startdate.$d).format(appConstant.DATE_CAMPAIGN_DTO_DATE_FORMAT),
+        endDate: moment(values.enddate.$d).format(appConstant.DATE_CAMPAIGN_DTO_DATE_FORMAT),
         budget: values.Budget,
         bidAmount: values.bidamount ? values.bidamount : 0,
         status: values.userstatus === "ACTIVE" ? true : false,
@@ -112,7 +113,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
 
   const handleStartDateChange = (value, date) => {
     if (date) {
-      const formattedStartTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      const formattedStartTimestamp = moment(date).format(appConstant.DATE_FORMAT).toString();
       setStartDate(formattedStartTimestamp);
       setEndDate(endDate);
     }
@@ -120,7 +121,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
 
   const handleEndDateChange = (value, date) => {
     if (date) {
-      const formattedEndTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      const formattedEndTimestamp = moment(date).format(appConstant.DATE_FORMAT).toString();
       setStartDate(startDate);
       setEndDate(formattedEndTimestamp);
     }
@@ -128,7 +129,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
 
   return (
     <Modal
-      title="Create Campaign"
+      title={appConstant.MODAL_CREATE_CAMPAIGN_TITLE}
       footer={[
         <div className="CreateAccountModal-footer" key="footer">
           <Button
@@ -138,10 +139,10 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
               handleCancel();
             }}
           >
-            Cancel
+            {appConstant.BUTTON_CANCEL_TEXT}
           </Button>
           <Button key="submit" type="primary" onClick={() => form.submit()}>
-            Submit
+            {appConstant.BUTTON_SUBMIT_TEXT}
           </Button>
         </div>,
       ]}
@@ -157,12 +158,21 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
         style={styledCollapse}
         className="custom-collapse"
       >
-        <Panel header={<div style={styledCollapse}>Details</div>} key="1">
+        <Panel header={<div style={styledCollapse}>{appConstant.PANEL_HEADER_DETAILS}</div>} key="1">
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
-            <FormSection label="Name" name="name" rules={[{ validator: (_, value) => validators.validateName(value) }]}>
+            <FormSection
+              label={appConstant.LABEL_CAMPAIGN_MODAL_NAME}
+              name="name"
+              rules={[{ validator: (_, value) => validators.validateName(value) }]}
+            >
               <Input style={styledInput} />
             </FormSection>
-            <StatusSelect label="User Status" name="userstatus" options={userStatus} styledInput={styledInput} />
+            <StatusSelect
+              label={appConstant.LABEL_CAMPAIGN_MODAL_STATUS}
+              name="userstatus"
+              options={userStatus}
+              styledInput={styledInput}
+            />
           </Form>
         </Panel>
       </Collapse>
@@ -173,20 +183,20 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
         style={styledCollapse}
         className="custom-collapse"
       >
-        <Panel header={<div style={styledCollapse}>Schedule</div>} key="2">
+        <Panel header={<div style={styledCollapse}>{appConstant.PANEL_HEADER_SCHEDULE}</div>} key="2">
           <div className="schedule-panel-content">
-            <div className="schedule-label">Schedule</div>
+            <div className="schedule-label">{appConstant.LABEL_CAMPAIGN_MODAL_SCHEDULE}</div>
             <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
               <div className="date-picker-container">
                 <DatePickerSection
-                  label="Start date"
+                  label={appConstant.LABEL_CAMPAIGN_MODAL_STARTDATE}
                   name="startdate"
                   onChange={handleStartDateChange}
                   disabledDate={disabledEndDate}
                   disabledTime={(current, type) => disabledEndDateTime(current, type)}
                 />
                 <DatePickerSection
-                  label="End date"
+                  label={appConstant.LABEL_CAMPAIGN_MODAL_ENDDATE}
                   name="enddate"
                   disabledDate={disabledEndDate}
                   disabledTime={(current, type) => disabledEndDateTime(current, type)}
@@ -204,15 +214,20 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
         style={styledCollapse}
         className="custom-collapse"
       >
-        <Panel header={<div style={styledCollapse}>Budget</div>} key="3">
+        <Panel header={<div style={styledCollapse}>{appConstant.PANEL_HEADER_BUDGET}</div>} key="3">
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
             <FormSection
-              label="Budget"
+              label={appConstant.LABEL_CAMPAIGN_MODAL_BUDGET}
               name="Budget"
               rules={[
                 {
                   validator: (_, value) =>
-                    validators.validateNumber(value, "Please input your Budget!", "Budget must be a number!", "Budget"),
+                    validators.validateNumber(
+                      value,
+                      errorMessage.ERROR_CAMPAIGN_BUDGET_REQUIRED,
+                      errorMessage.ERROR_CAMPAIGN_BUDGET_NUMBER_REQUIRED,
+                      "Budget"
+                    ),
                 },
               ]}
             >
@@ -228,10 +243,10 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
         style={styledCollapse}
         className="custom-collapse"
       >
-        <Panel header={<div style={styledCollapse}>Bidding</div>} key="4">
+        <Panel header={<div style={styledCollapse}>{appConstant.PANEL_HEADER_BIDDING}</div>} key="4">
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
             <FormSection
-              label="Bid Amount"
+              label={appConstant.LABEL_CAMPAIGN_MODAL_BIDAMOUNT}
               name="bidamount"
               rules={[
                 {
@@ -251,21 +266,25 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
         style={styledCollapse}
         className="custom-collapse"
       >
-        <Panel header={<div style={styledCollapse}>Creative</div>} key="5">
+        <Panel header={<div style={styledCollapse}>{appConstant.PANEL_HEADER_CREATIVE}</div>} key="5">
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
             <FormSection
-              label="Title"
+              label={appConstant.LABEL_CAMPAIGN_MODAL_TITLE}
               name="title"
               rules={[{ validator: (_, value) => validators.validateTitle(value) }]}
             >
               <Input style={styledInput} />
             </FormSection>
-            <FormSection label="Description" name="description">
+            <FormSection label={appConstant.LABEL_CAMPAIGN_MODAL_DESCRIPTION} name="description">
               <Input style={styledInput} />
             </FormSection>
-            <FileUploadSection label="Creative Preview" name="createpreview" beforeUpload={beforeUpload} />
+            <FileUploadSection
+              label={appConstant.LABEL_CAMPAIGN_MODAL_CREATIVE_PREVIEW}
+              name="createpreview"
+              beforeUpload={beforeUpload}
+            />
             {imageUrl && (
-              <Form.Item label="Preview Image">
+              <Form.Item label={appConstant.LABEL_CAMPAIGN_MODAL_PREVIEW_IMAGE}>
                 <div style={{ overflow: "hidden", marginLeft: "2.5em" }}>
                   <Image
                     src={imageUrl}
@@ -279,7 +298,7 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
                 </div>
               </Form.Item>
             )}
-            <FormSection label="Final URL" name="final_url">
+            <FormSection label={appConstant.LABEL_CAMPAIGN_MODAL_FINAL_URL} name="final_url">
               <Input style={styledInput} />
             </FormSection>
           </Form>

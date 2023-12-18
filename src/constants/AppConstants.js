@@ -12,6 +12,7 @@ export const TABLE_CAMPAIGN_ACTION = "Action";
 export const MODAL_CONFIRM_TITLE = "Confirmination";
 export const MODAL_OK_TEXT = "Delete";
 export const MODAL_EDIT_CAMPAIGN_TITLE = "Edit Campaign";
+export const MODAL_CREATE_CAMPAIGN_TITLE = "Create Campaign";
 
 // date
 export const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss.SSSZ";
