@@ -1,19 +1,24 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Collapse, DatePicker, Form, Image, Input, Modal, Select, Upload, message } from "antd";
+import { Button, Collapse, Form, Image, Input, Modal, Upload, message } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import useEditCampaign from "hooks/campaigns/useEditCampaign";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import "styles/Campaign/EditCampaignModal.css";
 import * as validators from "utils/validation";
+import DatePickerSection from "./Sections/DatePickerSection";
+import FileUploadSection from "./Sections/FileUploadSection";
+import FormSection from "./Sections/FormSection";
+import StatusSelect from "./Sections/StatusSelect";
 
-const { Option } = Select;
 const { Panel } = Collapse;
 
 const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData }) => {
   const [form] = useForm();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+
   useEffect(() => {
     console.log("init", initialData);
 
@@ -21,38 +26,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
       form.setFieldsValue(initialData);
     }
   }, [initialData, form]);
-  const disabledEndDate = (current) => {
-    return startDate ? current && current < moment(startDate).endOf("day") : false;
-  };
 
-  const disabledEndDateTime = (current, type) => {
-    if (type === "start") {
-      return false;
-    }
-
-    if (!startDate) {
-      return true;
-    }
-
-    const endOfDay = moment(startDate).endOf("day");
-
-    return current && current < endOfDay;
-  };
-
-  const handleStartDateChange = (value, date) => {
-    if (date) {
-      const formattedStartTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
-      setStartDate(formattedStartTimestamp);
-      setEndDate(endDate);
-    }
-  };
-  const handleEndDateChange = (value, date) => {
-    if (date) {
-      const formattedEndTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
-      setStartDate(startDate);
-      setEndDate(formattedEndTimestamp);
-    }
-  };
   const { editCampaign } = useEditCampaign();
 
   const styledInput = {
@@ -74,7 +48,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
     wrapperCol: { span: 16 },
   };
   const styledCollapse = { backgroundColor: "#468FAF", color: "#FFFFFF" };
-  const [imageUrl, setImageUrl] = useState(null);
+
   const onFinish = async (values) => {
     const campaignData = {
       campaignDTO: {
@@ -115,6 +89,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
       console.error(error);
     }
   };
+
   const beforeUpload = (file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -124,11 +99,37 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
     return false;
   };
 
-  const normFile = (e) => {
-    if (Array.isArray(e)) {
-      return e;
+  const handleStartDateChange = (value, date) => {
+    if (date) {
+      const formattedStartTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      setStartDate(formattedStartTimestamp);
+      setEndDate(endDate);
     }
-    return e && e.fileList;
+  };
+  const handleEndDateChange = (value, date) => {
+    if (date) {
+      const formattedEndTimestamp = moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ").toString();
+      setStartDate(startDate);
+      setEndDate(formattedEndTimestamp);
+    }
+  };
+
+  const disabledEndDate = (current) => {
+    return startDate ? current && current < moment(startDate).endOf("day") : false;
+  };
+
+  const disabledEndDateTime = (current, type) => {
+    if (type === "start") {
+      return false;
+    }
+
+    if (!startDate) {
+      return true;
+    }
+
+    const endOfDay = moment(startDate).endOf("day");
+
+    return current && current < endOfDay;
   };
   return (
     <Modal
@@ -163,42 +164,20 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
       >
         <Panel header={<div style={styledCollapse}>Details</div>} key="1">
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
-            <Form.Item
+            <FormSection
               label="Name"
               name="name"
-              className="custom-label-input"
-              rules={[
-                {
-                  required: false,
-                },
-
-                {
-                  validator: (_, value) => validators.validateName(value),
-                },
-              ]}
-              hasFeedback
+              rules={[{ required: false }, { validator: (_, value) => validators.validateName(value) }]}
             >
               <Input style={styledInput} />
-            </Form.Item>
-            <Form.Item
+            </FormSection>
+            <StatusSelect
               label="User Status"
               name="status"
-              className="custom-label-input"
-              rules={[
-                {
-                  required: true,
-                  message: "Please choose status!",
-                },
-              ]}
-            >
-              <Select style={styledInput}>
-                {userStatus.map((status) => (
-                  <Option key={status.status_id} value={status.status_name}>
-                    {status.status_name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
+              options={userStatus}
+              styledInput={styledInput}
+              rules={[{ required: true, message: "Please choose status!" }]}
+            />
           </Form>
         </Panel>
       </Collapse>
@@ -214,26 +193,20 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
             <div className="schedule-label">Schedule</div>
             <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
               <div className="date-picker-container">
-                <Form.Item label="Start date" name="startdate">
-                  <DatePicker
-                    id="start-date-picker"
-                    showTime={{ format: "HH:mm" }}
-                    format="YYYY-MM-DD HH:mm"
-                    placeholder="Select Start Date"
-                    onChange={handleStartDateChange}
-                  />
-                </Form.Item>
-                <Form.Item label="End date" name="enddate">
-                  <DatePicker
-                    id="end-date-picker"
-                    showTime={{ format: "HH:mm" }}
-                    format="YYYY-MM-DD HH:mm"
-                    placeholder="Select End Date"
-                    disabledDate={disabledEndDate}
-                    disabledTime={(current, type) => disabledEndDateTime(current, type)}
-                    onChange={handleEndDateChange}
-                  />
-                </Form.Item>
+                <DatePickerSection
+                  label="Start date"
+                  name="startDate"
+                  onChange={handleStartDateChange}
+                  styledInput={styledInput}
+                />
+                <DatePickerSection
+                  label="End date"
+                  name="endDate"
+                  disabledDate={disabledEndDate}
+                  disabledTime={(current, type) => disabledEndDateTime(current, type)}
+                  onChange={handleEndDateChange}
+                  styledInput={styledInput}
+                />
               </div>
             </Form>
           </div>
@@ -248,23 +221,19 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
       >
         <Panel header={<div style={styledCollapse}>Budget</div>} key="3">
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
-            <Form.Item
+            <FormSection
               label="Budget"
               name="budget"
-              className="custom-label-input"
               rules={[
-                {
-                  required: false,
-                },
+                { required: false },
                 {
                   validator: (_, value) =>
                     validators.validateNumber(value, "Please input your Budget!", "Budget must be a number!", "Budget"),
                 },
               ]}
-              hasFeedback
             >
               <Input style={styledInput} />
-            </Form.Item>
+            </FormSection>
           </Form>
         </Panel>
       </Collapse>
@@ -277,22 +246,16 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
       >
         <Panel header={<div style={styledCollapse}>Bidding</div>} key="4">
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
-            <Form.Item
+            <FormSection
               label="Bid Amount"
               name="bidAmount"
-              className="custom-label-input"
               rules={[
-                {
-                  required: false,
-                },
-                {
-                  validator: (_, value) => validators.validateBidAmount(value, form.getFieldValue("budget")),
-                },
+                { required: false },
+                { validator: (_, value) => validators.validateBidAmount(value, form.getFieldValue("budget")) },
               ]}
-              hasFeedback
             >
               <Input style={styledInput} />
-            </Form.Item>
+            </FormSection>
           </Form>
         </Panel>
       </Collapse>
@@ -305,72 +268,39 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
       >
         <Panel header={<div style={styledCollapse}>Creative</div>} key="5">
           <Form form={form} {...formItemLayout} labelAlign="left" onFinish={onFinish}>
-            <Form.Item
+            <FormSection
               label="Title"
               name="title"
-              className="custom-label-input"
-              rules={[
-                {
-                  required: false,
-                },
-                {
-                  validator: (_, value) => validators.validateTitle(value),
-                },
-              ]}
-              hasFeedback
+              rules={[{ required: false }, { validator: (_, value) => validators.validateTitle(value) }]}
             >
               <Input style={styledInput} />
-            </Form.Item>
-            <Form.Item
-              label="Description"
-              name="description"
-              className="custom-label-input"
-              rules={[
-                {
-                  required: false,
-                },
-              ]}
-            >
+            </FormSection>
+            <FormSection label="Description" name="description" rules={[{ required: false }]}>
               <Input style={styledInput} />
-            </Form.Item>
-            <Form.Item
+            </FormSection>
+            <FileUploadSection
               label="Creative Preview"
               name="createpreview"
-              className="custom-label-input"
-              rules={[
-                {
-                  required: true,
-                  message: "Please submit your image",
-                },
-              ]}
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
+              rules={[{ required: true, message: "Please submit your image" }]}
+              beforeUpload={beforeUpload}
+              styledInput={styledInput}
             >
               <Upload showUploadList={false} beforeUpload={beforeUpload}>
                 <Button style={styledInput} icon={<UploadOutlined />}>
                   Click to Upload
                 </Button>
               </Upload>
-            </Form.Item>
+            </FileUploadSection>
             {imageUrl && (
-              <Form.Item label="Preview Image">
+              <FormSection label="Preview Image">
                 <div style={{ overflow: "hidden", marginLeft: "2.5em" }}>
                   <Image src={imageUrl} alt="Uploaded" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
-              </Form.Item>
+              </FormSection>
             )}
-            <Form.Item
-              label="Final URL"
-              name="finalUrl"
-              className="custom-label-input"
-              rules={[
-                {
-                  required: false,
-                },
-              ]}
-            >
+            <FormSection label="Final URL" name="finalUrl" rules={[{ required: false }]}>
               <Input style={styledInput} />
-            </Form.Item>
+            </FormSection>
           </Form>
         </Panel>
       </Collapse>

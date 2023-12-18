@@ -1,7 +1,7 @@
 import { Button, Input, Modal, Table, message } from "antd";
-import Dashboardbanner from "components/Dashboard/banner/Dashboardbanner";
-import Dashboardleft from "components/Dashboard/dashboard_left/dashboardleft";
-import Dashboardheader from "components/Dashboard/header/Dashboardheader";
+import Banner from "components/Dashboard/Banner/Banner";
+import Sidebar from "components/Dashboard/Sidebar/Sidebar";
+import Header from "components/Dashboard/Header/Header";
 import { useDeleteAccount } from "hooks/accounts/useDeleteAccount";
 import { useSearchAccounts } from "hooks/accounts/useSearchAccounts";
 import { debounce } from "lodash";
@@ -139,10 +139,10 @@ const Account = () => {
   ];
   return (
     <div className="container">
-      <Dashboardbanner />
-      <Dashboardheader />
+      <Banner />
+      <Header />
       <div className="dashboard_body">
-        <Dashboardleft />
+        <Sidebar />
         <div className="content">
           <div className="account-header">
             <div>

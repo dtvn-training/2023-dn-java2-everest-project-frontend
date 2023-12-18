@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import "./dashboardleft.css";
+import "styles/Sidebar/Sidebar.css";
 
-const Dashboardleft = () => {
+const Sidebar = () => {
   const location = useLocation();
   const pageMappings = {
     "/dashboard": { label: "Dashboard", icon: "fas fa-chart-bar" },
@@ -33,4 +33,4 @@ const Dashboardleft = () => {
   );
 };
 
-export default Dashboardleft;
+export default Sidebar;

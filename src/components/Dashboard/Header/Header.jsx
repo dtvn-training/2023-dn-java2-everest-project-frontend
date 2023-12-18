@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import "./Dashboardheader.css";
+import "styles/Header/Header.css";
 
-const Dashboardheader = () => {
+const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -20,4 +20,4 @@ const Dashboardheader = () => {
   );
 };
 
-export default Dashboardheader;
+export default Header;

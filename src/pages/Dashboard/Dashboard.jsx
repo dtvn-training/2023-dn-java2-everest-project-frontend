@@ -1,11 +1,11 @@
 import { DatePicker, Input, Table } from "antd";
+import Banner from "components/Dashboard/Banner/Banner";
+import Header from "components/Dashboard/Header/Header";
+import Sidebar from "components/Dashboard/Sidebar/Sidebar";
+import { useSearchCampaign } from "hooks/campaigns/useSearchCampaign";
 import { debounce } from "lodash";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import Dashboardbanner from "components/Dashboard/banner/Dashboardbanner";
-import Dashboardleft from "components/Dashboard/dashboard_left/dashboardleft";
-import Dashboardheader from "components/Dashboard/header/Dashboardheader";
-import { useSearchCampaign } from "hooks/campaigns/useSearchCampaign";
 import "styles/Dashboard/Dashboard.css";
 
 const Dashboard = () => {
@@ -168,10 +168,10 @@ const Dashboard = () => {
 
   return (
     <div className="container">
-      <Dashboardbanner />
-      <Dashboardheader />
+      <Banner />
+      <Header />
       <div className="dashboard_body">
-        <Dashboardleft />
+        <Sidebar />
         <div className="content">
           <div className="dashboard-header">
             <div>

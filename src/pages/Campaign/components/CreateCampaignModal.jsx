@@ -125,14 +125,6 @@ const CreateCampaignModal = ({ isModalOpen, handleOk, handleCancel, submitData }
     }
   };
 
-  // giữ
-
-  const normFile = (e) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  };
   return (
     <Modal
       title="Create Campaign"

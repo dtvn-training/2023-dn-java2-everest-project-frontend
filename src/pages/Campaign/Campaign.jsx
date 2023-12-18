@@ -1,7 +1,7 @@
 import { Button, DatePicker, Input, Modal, Table, message } from "antd";
-import Dashboardbanner from "components/Dashboard/banner/Dashboardbanner";
-import Dashboardleft from "components/Dashboard/dashboard_left/dashboardleft";
-import Dashboardheader from "components/Dashboard/header/Dashboardheader";
+import Banner from "components/Dashboard/Banner/Banner";
+import Sidebar from "components/Dashboard/Sidebar/Sidebar";
+import Header from "components/Dashboard/Header/Header";
 import { useDeleteCampaign } from "hooks/campaigns/useDeteleCampaign";
 import { useSearchCampaign } from "hooks/campaigns/useSearchCampaign";
 import { debounce } from "lodash";
@@ -17,6 +17,26 @@ const Campaign = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const { mutateAsync } = useDeleteCampaign();
+  const [editModal, setEditModal] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 3,
+  });
+  const [total, setTotal] = useState(0);
+  const [searchText, setSearchText] = useState("");
+  const { data: fetchCampaigns, isFetching } = useSearchCampaign(
+    searchText,
+    startDate,
+    endDate,
+    pagination.pageSize,
+    pagination.current - 1
+  );
+  useEffect(() => {
+    if (fetchCampaigns) {
+      setTotal(fetchCampaigns?.data?.totalElements || 0);
+    }
+  }, [fetchCampaigns]);
 
   const disabledEndDate = (current) => {
     return startDate ? current && current < moment(startDate).endOf("day") : false;
@@ -76,27 +96,7 @@ const Campaign = () => {
   const handleSearchInputChange = (e) => {
     debouncedSetSearchAndDate(e.target.value, startDate, endDate);
   };
-  const [editModal, setEditModal] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState(null);
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 3,
-  });
-  const [total, setTotal] = useState(0);
-  const [searchText, setSearchText] = useState("");
-  const { data: fetchCampaigns, isFetching } = useSearchCampaign(
-    searchText,
-    startDate,
-    endDate,
-    pagination.pageSize,
-    pagination.current - 1
-  );
 
-  useEffect(() => {
-    if (fetchCampaigns) {
-      setTotal(fetchCampaigns?.data?.totalElements || 0);
-    }
-  }, [fetchCampaigns]);
   const handleTableChange = (pagination, filters, sorter) => {
     setPagination({
       ...pagination,
@@ -222,10 +222,10 @@ const Campaign = () => {
 
   return (
     <div className="container">
-      <Dashboardbanner />
-      <Dashboardheader />
+      <Banner />
+      <Header />
       <div className="dashboard_body">
-        <Dashboardleft />
+        <Sidebar />
         <div className="content">
           <div className="campaign-header">
             <div>
