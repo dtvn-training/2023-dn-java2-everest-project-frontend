@@ -9,9 +9,9 @@ const Sidebar = () => {
     "/campaign": { label: "Campaign", icon: "fas fa-bullhorn" },
     "/account": { label: "Account", icon: "fas fa-user" },
   };
-  const [isMenuOpen, setMenuOpen] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
   const toggleMenu = () => {
-    setMenuOpen(!isMenuOpen);
+    setIsMenuOpen(!isMenuOpen);
   };
   return (
     <div className={`dashboard_left ${isMenuOpen ? "" : "slide-out"}`}>

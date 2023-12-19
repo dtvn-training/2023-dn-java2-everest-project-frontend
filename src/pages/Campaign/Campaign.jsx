@@ -17,7 +17,7 @@ import CreateCampaignModal from "./components/CreateCampaignModal";
 import EditCampaignModal from "./components/EditCampaignModal";
 
 const Campaign = () => {
-  const [modals, SetModal] = useState(false);
+  const [modals, setModals] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const { mutateAsync } = useDeleteCampaign();
@@ -201,7 +201,7 @@ const Campaign = () => {
                   {appConstants.BUTTON_EXPORT_CSV_TEXT}
                 </Button>
                 <Button
-                  onClick={() => SetModal(true)}
+                  onClick={() => setModals(true)}
                   type="default"
                   style={{ backgroundColor: appConstants.MAIN_COLOR, color: "#fff", width: "150px" }}
                 >
@@ -235,14 +235,14 @@ const Campaign = () => {
         isModalOpen={modals}
         handleOk={() => {}}
         handleCancel={() => {
-          SetModal(!modals);
+          setModals(!modals);
         }}
       />
       <EditCampaignModal
         isModalOpen={editModal}
         handleOk={() => {}}
         handleCancel={() => {
-          SetModal(false);
+          setModals(false);
           setEditModal(false);
           setSelectedRecord(null);
         }}

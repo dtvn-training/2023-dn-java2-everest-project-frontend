@@ -57,7 +57,7 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
         endDate: moment(values.endDate.$d).format(appConstant.DATE_CAMPAIGN_DTO_DATE_FORMAT),
         budget: values.budget,
         bidAmount: values.bidamount ? values.bidamount : 0,
-        status: values.status === "ACTIVE" ? true : false,
+        status: values.status === "ACTIVE",
       },
       creativesDTO: {
         title: values.title,
