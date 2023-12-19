@@ -5,7 +5,7 @@ const deleteAccount = async ({ id }) => {
   const accessToken = window.localStorage.getItem("accessToken");
 
   const response = await axiosClient.patch(
-    `/api/v1/accounts/deleteAccount?id=${id}`,
+    `/api/v1/accounts/delete-account?id=${id}`,
     {},
     {
       headers: {

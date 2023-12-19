@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "react-query";
 const dataAccounts = async ({ id, record }) => {
   const accessToken = window.localStorage.getItem("accessToken");
 
-  const response = await axiosClient.put(`/api/v1/accounts/update?id=${id}`, record, {
+  const response = await axiosClient.put(`/api/v1/accounts/update-account?id=${id}`, record, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

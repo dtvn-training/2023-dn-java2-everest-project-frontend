@@ -2,7 +2,7 @@ import axiosClient from "api/axiosClient";
 import { useMutation, useQueryClient } from "react-query";
 
 const createAccount = async (data, token) => {
-  const response = await axiosClient.post("/api/v1/accounts/registerAccount", data, {
+  const response = await axiosClient.post("/api/v1/accounts/register-account", data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

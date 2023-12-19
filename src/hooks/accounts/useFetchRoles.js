@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 const fetchRoles = async () => {
   const accessToken = window.localStorage.getItem("accessToken");
 
-  const response = await axiosClient.get("/api/v1/accounts/getRoles", {
+  const response = await axiosClient.get("/api/v1/accounts/get-roles", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

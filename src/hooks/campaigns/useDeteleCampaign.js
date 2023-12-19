@@ -4,7 +4,7 @@ const deleteCampagign = async ({ id }) => {
   const accessToken = window.localStorage.getItem("accessToken");
 
   const response = await axiosClient.patch(
-    `/api/v1/campaigns/deleteCampagign?id=${id}`,
+    `/api/v1/campaigns/delete-campaign?id=${id}`,
     {},
     {
       headers: {

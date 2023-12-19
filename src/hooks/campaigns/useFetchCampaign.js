@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 const fetchCampaigns = async (pageSize, pageNo) => {
   const accessToken = window.localStorage.getItem("accessToken");
 
-  const response = await axiosClient.get("/api/v1/campaigns/getCampaign", {
+  const response = await axiosClient.get("/api/v1/campaigns/get-campaign", {
     params: {
       pageSize,
       pageNo,

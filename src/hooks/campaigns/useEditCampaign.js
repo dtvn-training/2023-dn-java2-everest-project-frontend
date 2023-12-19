@@ -6,7 +6,7 @@ const useEditCampaign = () => {
 
   const mutation = useMutation(
     async ({ id, formData, token }) => {
-      const response = await axiosClient.put(`/api/v1/campaigns/updateCampagin?id=${id}`, formData, {
+      const response = await axiosClient.put(`/api/v1/campaigns/update-campaign?id=${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
