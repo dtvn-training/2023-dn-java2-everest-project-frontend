@@ -50,7 +50,6 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
   const styledCollapse = { backgroundColor: appConstant.MAIN_COLOR, color: "#FFFFFF" };
 
   const onFinish = async (values) => {
-    console.log("values: ", values);
     const campaignData = {
       campaignDTO: {
         name: values.name,

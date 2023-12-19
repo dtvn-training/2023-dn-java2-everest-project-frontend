@@ -13,7 +13,6 @@ const contentStyle = {
 const Banner = () => {
   const { data, isError, isLoading, refetch } = useFetchBanners();
   const { mutate } = useMinusBudget();
-  console.log(data);
 
   const carouselSettings = {
     autoplay: true,
