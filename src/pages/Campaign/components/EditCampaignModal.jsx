@@ -50,13 +50,14 @@ const EditCampaignModal = ({ isModalOpen, handleOk, handleCancel, initialData })
   const styledCollapse = { backgroundColor: appConstant.MAIN_COLOR, color: "#FFFFFF" };
 
   const onFinish = async (values) => {
+    console.log("values: ", values);
     const campaignData = {
       campaignDTO: {
         name: values.name,
-        startDate: moment(values.startDate.$d).format(appConstant.DATE_CAMPAIGN_DTO_DATE_FORMAT),
-        endDate: moment(values.endDate.$d).format(appConstant.DATE_CAMPAIGN_DTO_DATE_FORMAT),
+        startDate: moment(values.startDate._d).format(appConstant.DATE_CAMPAIGN_DTO_DATE_FORMAT),
+        endDate: moment(values.endDate._d).format(appConstant.DATE_CAMPAIGN_DTO_DATE_FORMAT),
         budget: values.budget,
-        bidAmount: values.bidamount ? values.bidamount : 0,
+        bidAmount: values.bidAmount ? values.bidAmount : 0,
         status: values.status === "ACTIVE",
       },
       creativesDTO: {
