@@ -1,18 +1,27 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ## Available Scripts
+
+In the project directory, you must rename `env.example` to `env`, and delete all `.example` extension of each file, then you can fill all variable with appropriate values
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run start:development`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+You can also run:
+
+```
+
+1] npm run start:development
+
+2] npm run build:staging
+
+3] npm run build:qa
+
+4] npm run build:production
+
+```
 
 ### `npm test`
 
